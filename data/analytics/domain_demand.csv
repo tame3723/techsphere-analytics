@@ -1,0 +1,8 @@
+domain,job_count,weighted_job_count,percentage,weighted_percentage,confidence_score,cumulative_percentage
+Software Engineering,16074,10370.1,41.98,37.75,0.645,41.98
+Data Science,6618,4996.0,17.28,18.19,0.755,59.26
+DevOps,4636,3543.2999999999997,12.11,12.9,0.764,71.37
+Cybersecurity,3132,2408.9,8.18,8.77,0.769,79.55
+Web Development,3042,2217.6,7.94,8.07,0.729,87.49
+AI/ML,2762,2235.7,7.21,8.14,0.809,94.7
+Cloud Computing,2026,1696.7,5.29,6.18,0.837,99.99

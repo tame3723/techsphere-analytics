@@ -1,0 +1,4 @@
+quality_source,count,total_weight,percentage,weighted_percentage
+original_cleaned,10541,10541.0,27.53,38.38
+enhanced_generated,503,1945.3,1.31,7.08
+generated,0,14982.0,0.0,54.54

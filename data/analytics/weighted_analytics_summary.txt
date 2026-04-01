@@ -1,0 +1,51 @@
+================================================================================
+TECHSPHERE ANALYTICS - WEIGHTED ANALYTICS SUMMARY
+================================================================================
+
+DATA QUALITY FRAMEWORK
+----------------------------------------
+Quality Weights (Higher = More Trustworthy):
+  original                 : 1.0
+  original_cleaned         : 1.0
+  original_calculated      : 1.0
+  enhanced_generated       : 0.7
+  generated                : 0.6
+  generated_refined        : 0.6
+  generated_salary         : 0.5
+
+Effective Data Quality:
+  Description Quality Index: 0.717
+  Salary Quality Index: 0.621
+
+OPPORTUNITY SCORE CONFIGURATION
+----------------------------------------
+  Demand Weight: 0.4 (40% of raw score)
+  Salary Weight: 0.4 (40% of raw score)
+  Diversity Weight: 0.2 (20% of raw score)
+  Confidence Adjustment: Raw score × Confidence (0-1 scale)
+
+SALARY OUTLIER PROTECTION
+----------------------------------------
+  Outlier clipping: 99th percentile
+  Prevents extreme values from distorting averages
+
+DOMAIN OPPORTUNITY SCORES (Weighted & Confidence-Adjusted)
+----------------------------------------
+  AI/ML                    : Score=0.3002 (Confidence=0.57, Original Salary=8%)
+  Cloud Computing          : Score=0.2511 (Confidence=0.59, Original Salary=9%)
+  Software Engineering     : Score=0.2254 (Confidence=0.51, Original Salary=3%)
+  Data Science             : Score=0.2136 (Confidence=0.54, Original Salary=3%)
+  DevOps                   : Score=0.2001 (Confidence=0.55, Original Salary=5%)
+  Cybersecurity            : Score=0.1667 (Confidence=0.55, Original Salary=6%)
+  Web Development          : Score=0.0434 (Confidence=0.54, Original Salary=4%)
+
+================================================================================
+Methodological Note:
+- Original/real data receives weight = 1.0
+- Generated/imputed data receives weight = 0.5-0.7
+- Confidence scores reflect proportion of original data
+- Opportunity scores = (weighted raw score) × confidence
+- Document-frequency keyword extraction prevents bias
+- Salary outliers clipped at 99th percentile for stability
+- This ensures analytics reflect real job market trends
+================================================================================

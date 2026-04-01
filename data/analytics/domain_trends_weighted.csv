@@ -1,0 +1,8 @@
+year,domain,weighted_job_count,job_count,growth_pct,weighted_growth_pct,year_total_weighted,market_share_pct
+2025.0,AI/ML,2235.7,2762,,,27468.3,8.14
+2025.0,Cloud Computing,1696.7,2026,,,27468.3,6.18
+2025.0,Cybersecurity,2408.9,3132,,,27468.3,8.77
+2025.0,Data Science,4996.0,6618,,,27468.3,18.19
+2025.0,DevOps,3543.2999999999997,4636,,,27468.3,12.9
+2025.0,Software Engineering,10370.1,16074,,,27468.3,37.75
+2025.0,Web Development,2217.6,3042,,,27468.3,8.07

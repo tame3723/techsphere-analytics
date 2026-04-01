@@ -1,0 +1,71 @@
+location,job_count,weighted_job_count,domain,percentage
+united states,160,192.4,Software Engineering,1.0
+"new york, ny",39,174.9,Software Engineering,0.24
+"san francisco, ca",16,139.0,Software Engineering,0.1
+"chicago, il",24,130.2,Software Engineering,0.15
+"austin, tx",25,127.0,Software Engineering,0.16
+"seattle, wa",20,122.0,Software Engineering,0.12
+"atlanta, ga",16,106.0,Software Engineering,0.1
+"los angeles, ca",10,95.8,Software Engineering,0.06
+"london, england, united kingdom",0,93.0,Software Engineering,0.0
+"boston, ma",12,93.0,Software Engineering,0.07
+united states,174,183.9,Web Development,5.72
+"new york, ny",21,41.699999999999996,Web Development,0.69
+"dallas, tx",28,37.0,Web Development,0.92
+"san francisco, ca",11,32.6,Web Development,0.36
+"atlanta, ga",14,31.4,Web Development,0.46
+"austin, tx",19,29.2,Web Development,0.62
+"chicago, il",19,29.2,Web Development,0.62
+"plano, tx",16,24.1,Web Development,0.53
+"san diego, ca",11,23.599999999999998,Web Development,0.36
+"new york, united states",16,22.9,Web Development,0.53
+united states,223,228.1,Cloud Computing,11.01
+"new york, ny",43,48.4,Cloud Computing,2.12
+"atlanta, ga",33,39.9,Cloud Computing,1.63
+"chicago, il",32,36.5,Cloud Computing,1.58
+"dallas, tx",32,35.3,Cloud Computing,1.58
+"mclean, va",31,31.9,Cloud Computing,1.53
+"richmond, va",28,28.9,Cloud Computing,1.38
+"boston, ma",22,25.9,Cloud Computing,1.09
+"plano, tx",23,25.4,Cloud Computing,1.14
+"austin, tx",20,25.4,Cloud Computing,0.99
+united states,228,228.9,DevOps,4.92
+"atlanta, ga",48,73.5,DevOps,1.04
+"austin, tx",37,57.699999999999996,DevOps,0.8
+"new york, ny",41,56.0,DevOps,0.88
+"dallas, tx",41,50.9,DevOps,0.88
+"chicago, il",32,49.1,DevOps,0.69
+"charlotte, nc",34,49.0,DevOps,0.73
+"houston, tx",32,47.3,DevOps,0.69
+"phoenix, az",27,38.7,DevOps,0.58
+"plano, tx",31,38.5,DevOps,0.67
+united states,312,331.5,Data Science,4.71
+"new york, ny",49,127.69999999999999,Data Science,0.74
+"chicago, il",46,104.89999999999999,Data Science,0.7
+"dallas, tx",40,87.89999999999999,Data Science,0.6
+"austin, tx",40,81.6,Data Science,0.6
+"seattle, wa",40,81.1,Data Science,0.6
+"boston, ma",33,78.5,Data Science,0.5
+"san francisco, ca",24,77.2,Data Science,0.36
+"washington, dc",13,73.39999999999999,Data Science,0.2
+"atlanta, ga",32,71.7,Data Science,0.48
+united states,202,205.6,AI/ML,7.31
+"new york, ny",56,82.7,AI/ML,2.03
+"san francisco, ca",32,56.0,AI/ML,1.16
+"seattle, wa",39,55.2,AI/ML,1.41
+"chicago, il",27,49.199999999999996,AI/ML,0.98
+"austin, tx",32,45.8,AI/ML,1.16
+"atlanta, ga",27,39.3,AI/ML,0.98
+"san jose, ca",29,39.2,AI/ML,1.05
+"boston, ma",27,39.0,AI/ML,0.98
+"mclean, va",22,32.5,AI/ML,0.8
+united states,208,213.1,Cybersecurity,6.64
+"washington, dc",16,47.199999999999996,Cybersecurity,0.51
+"atlanta, ga",36,45.3,Cybersecurity,1.15
+"new york, ny",22,37.6,Cybersecurity,0.7
+"chicago, il",25,32.2,Cybersecurity,0.8
+"dallas, tx",19,30.4,Cybersecurity,0.61
+"charlotte, nc",22,28.9,Cybersecurity,0.7
+"plano, tx",22,28.6,Cybersecurity,0.7
+"austin, tx",19,27.4,Cybersecurity,0.61
+"colorado springs, co",16,26.8,Cybersecurity,0.51
