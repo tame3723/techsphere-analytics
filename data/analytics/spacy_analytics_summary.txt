@@ -1,0 +1,25 @@
+================================================================================
+TECHSPHERE ANALYTICS - PIPELINE SUMMARY
+================================================================================
+
+Total records: 38,290
+Parallel workers: 6
+Cache enabled: True
+SpaCy batch size: 200
+
+OPTIMIZATIONS APPLIED:
+----------------------------------------
+[OK] spaCy loaded once per worker
+[OK] Pass only lists to workers
+[OK] Config-aware cache invalidation
+[OK] Vectorized skill extraction
+
+OPPORTUNITY SCORES
+----------------------------------------
+  AI/ML                    : 0.3922
+  Cloud Computing          : 0.3291
+  Software Engineering     : 0.3168
+  Data Science             : 0.2927
+  DevOps                   : 0.2617
+  Cybersecurity            : 0.2183
+  Web Development          : 0.0589

@@ -1,251 +1,251 @@
-domain,skill,frequency,weighted_frequency,pct_of_jobs,weighted_pct,confidence,rank
-AI/ML,LangChain,603,478.4,21.83,2.93,0.79,1
-AI/ML,MLOps,594,474.7,21.51,2.9,0.8,2
-AI/ML,Prompt Engineering,593,472.9,21.47,2.89,0.8,3
-AI/ML,LLM,576,467.1,20.85,2.86,0.81,4
-AI/ML,scikit-learn,577,465.1,20.89,2.84,0.81,5
-AI/ML,Team Collaboration,571,459.0,20.67,2.81,0.8,6
-AI/ML,Transformers,570,458.1,20.64,2.8,0.8,7
-AI/ML,Generative AI,566,454.3,20.49,2.78,0.8,8
-AI/ML,Code Review,572,451.9,20.71,2.76,0.79,9
-AI/ML,Hyperparameter Tuning,567,444.0,20.53,2.72,0.78,10
-AI/ML,Feature Engineering,554,443.8,20.06,2.71,0.8,11
-AI/ML,Git,554,441.2,20.06,2.7,0.8,12
-AI/ML,GPT,546,437.7,19.77,2.68,0.8,13
-AI/ML,Reinforcement Learning,541,437.5,19.59,2.68,0.81,14
-AI/ML,Keras,538,437.2,19.48,2.67,0.81,15
-AI/ML,Performance Optimization,548,437.1,19.84,2.67,0.8,16
-AI/ML,Critical Thinking,545,436.6,19.73,2.67,0.8,17
-AI/ML,BERT,537,435.9,19.44,2.67,0.81,18
-AI/ML,Attention Mechanism,553,435.1,20.02,2.66,0.79,19
-AI/ML,Agile Methodology,549,434.9,19.88,2.66,0.79,20
-AI/ML,Model Evaluation,550,434.7,19.91,2.66,0.79,21
-AI/ML,Data Preprocessing,532,432.9,19.26,2.65,0.81,22
-AI/ML,TensorFlow,499,431.9,18.07,2.64,0.87,23
-AI/ML,Model Training,538,430.9,19.48,2.63,0.8,24
-AI/ML,Problem Solving,526,425.6,19.04,2.6,0.81,25
-AI/ML,Communication Skills,537,425.5,19.44,2.6,0.79,26
-AI/ML,Deep Learning,475,423.9,17.2,2.59,0.89,27
-AI/ML,Debugging,531,420.4,19.23,2.57,0.79,28
-AI/ML,Testing,536,418.0,19.41,2.56,0.78,29
-AI/ML,Documentation,521,415.6,18.86,2.54,0.8,30
-AI/ML,NLP,466,406.8,16.87,2.49,0.87,31
-AI/ML,OpenCV,513,406.7,18.57,2.49,0.79,32
-AI/ML,Transfer Learning,519,405.9,18.79,2.48,0.78,33
-AI/ML,Python,507,404.6,18.36,2.47,0.8,34
-AI/ML,PyTorch,436,380.1,15.79,2.32,0.87,35
-AI/ML,Neural Networks,437,374.2,15.82,2.29,0.86,36
-AI/ML,Hugging Face,478,371.1,17.31,2.27,0.78,37
-AI/ML,Computer Vision,392,337.0,14.19,2.06,0.86,38
-AI/ML,RNN,4,3.6,0.14,0.02,0.9,39
-AI/ML,CNN,2,1.6,0.07,0.01,0.8,40
-Cloud Computing,Lambda,540,458.4,26.65,3.68,0.85,1
-Cloud Computing,Terraform,520,433.0,25.67,3.48,0.83,2
-Cloud Computing,Communication Skills,492,410.4,24.28,3.3,0.83,3
-Cloud Computing,S3,486,407.3,23.99,3.27,0.84,4
-Cloud Computing,EC2,460,395.6,22.7,3.18,0.86,5
-Cloud Computing,Kubernetes,474,391.7,23.4,3.15,0.83,6
-Cloud Computing,Documentation,470,389.7,23.2,3.13,0.83,7
-Cloud Computing,Critical Thinking,470,389.3,23.2,3.13,0.83,8
-Cloud Computing,AWS,427,383.9,21.08,3.08,0.9,9
-Cloud Computing,Git,457,382.7,22.56,3.07,0.84,10
-Cloud Computing,Testing,456,380.5,22.51,3.06,0.83,11
-Cloud Computing,Google Cloud Platform,459,379.8,22.66,3.05,0.83,12
-Cloud Computing,Problem Solving,449,370.3,22.16,2.97,0.82,13
-Cloud Computing,Serverless,449,369.2,22.16,2.96,0.82,14
-Cloud Computing,Agile Methodology,449,366.6,22.16,2.94,0.82,15
-Cloud Computing,Route53,446,366.5,22.01,2.94,0.82,16
-Cloud Computing,Team Collaboration,444,366.0,21.92,2.94,0.82,17
-Cloud Computing,CloudFormation,441,364.8,21.77,2.93,0.83,18
-Cloud Computing,Performance Optimization,441,359.3,21.77,2.88,0.81,19
-Cloud Computing,Hybrid Cloud,434,355.4,21.42,2.85,0.82,20
-Cloud Computing,Debugging,432,354.8,21.32,2.85,0.82,21
-Cloud Computing,Cloud Networking,438,353.1,21.62,2.84,0.81,22
-Cloud Computing,Virtual Machines,432,351.7,21.32,2.82,0.81,23
-Cloud Computing,Load Balancing,433,345.7,21.37,2.78,0.8,24
-Cloud Computing,Cloud Architecture,420,345.5,20.73,2.77,0.82,25
-Cloud Computing,Infrastructure as Code,385,344.0,19.0,2.76,0.89,26
-Cloud Computing,Code Review,408,339.4,20.14,2.73,0.83,27
-Cloud Computing,Cloud Cost Optimization,406,338.4,20.04,2.72,0.83,28
-Cloud Computing,Cloud Security,383,337.6,18.9,2.71,0.88,29
-Cloud Computing,CDN,413,336.5,20.38,2.7,0.81,30
-Cloud Computing,Auto Scaling,414,335.3,20.43,2.69,0.81,31
-Cloud Computing,Multi-cloud,376,329.0,18.56,2.64,0.88,32
-Cloud Computing,Azure,373,322.8,18.41,2.59,0.87,33
-Cloud Computing,Cloud Migration,344,300.1,16.98,2.41,0.87,34
-Cybersecurity,Security Auditing,741,562.8,23.66,3.15,0.76,1
-Cybersecurity,Threat Modeling,717,554.7,22.89,3.1,0.77,2
-Cybersecurity,Penetration Testing,711,551.6,22.7,3.09,0.78,3
-Cybersecurity,Cloud Security,715,549.1,22.83,3.07,0.77,4
-Cybersecurity,Risk Assessment,709,546.8,22.64,3.06,0.77,5
-Cybersecurity,Firewalls,716,544.8,22.86,3.05,0.76,6
-Cybersecurity,Zero Trust,691,533.4,22.06,2.98,0.77,7
-Cybersecurity,OWASP,691,532.3,22.06,2.98,0.77,8
-Cybersecurity,Malware Analysis,696,532.2,22.22,2.98,0.76,9
-Cybersecurity,Documentation,698,529.7,22.29,2.96,0.76,10
-Cybersecurity,Ethical Hacking,691,528.6,22.06,2.96,0.76,11
-Cybersecurity,Incident Response,686,528.6,21.9,2.96,0.77,11
-Cybersecurity,Problem Solving,690,527.8,22.03,2.95,0.76,12
-Cybersecurity,Git,691,523.9,22.06,2.93,0.76,13
-Cybersecurity,Code Review,684,519.6,21.84,2.91,0.76,14
-Cybersecurity,Performance Optimization,683,518.9,21.81,2.9,0.76,15
-Cybersecurity,Debugging,681,518.6,21.74,2.9,0.76,16
-Cybersecurity,Vulnerability Assessment,671,518.2,21.42,2.9,0.77,17
-Cybersecurity,IDS/IPS,665,514.6,21.23,2.88,0.77,18
-Cybersecurity,GDPR,673,513.1,21.49,2.87,0.76,19
-Cybersecurity,Agile Methodology,674,512.1,21.52,2.86,0.76,20
-Cybersecurity,Testing,665,511.2,21.23,2.86,0.77,21
-Cybersecurity,SIEM,674,510.8,21.52,2.86,0.76,22
-Cybersecurity,Encryption,668,510.3,21.33,2.85,0.76,23
-Cybersecurity,Cryptography,657,509.8,20.98,2.85,0.78,24
-Cybersecurity,IAM,672,509.2,21.46,2.85,0.76,25
-Cybersecurity,Critical Thinking,673,508.0,21.49,2.84,0.75,26
-Cybersecurity,ISO 27001,663,506.1,21.17,2.83,0.76,27
-Cybersecurity,DevSecOps,663,504.6,21.17,2.82,0.76,28
-Cybersecurity,Communication Skills,660,501.1,21.07,2.8,0.76,29
-Cybersecurity,Team Collaboration,654,494.3,20.88,2.77,0.76,30
-Cybersecurity,Digital Forensics,657,493.7,20.98,2.76,0.75,31
-Cybersecurity,Compliance,470,393.7,15.01,2.2,0.84,32
-Cybersecurity,Network Security,469,387.7,14.97,2.17,0.83,33
-Cybersecurity,Security Automation,460,373.6,14.69,2.09,0.81,34
-Data Science,pandas,1394,1049.5,21.06,2.83,0.75,1
-Data Science,Power BI,1383,1042.6,20.9,2.81,0.75,2
-Data Science,Hadoop,1390,1041.0,21.0,2.8,0.75,3
-Data Science,Statistics,1385,1040.4,20.93,2.8,0.75,4
-Data Science,Communication Skills,1398,1039.3,21.12,2.8,0.74,5
-Data Science,Performance Optimization,1377,1036.9,20.81,2.79,0.75,6
-Data Science,R,1377,1035.6,20.81,2.79,0.75,7
-Data Science,Big Data,1373,1034.3,20.75,2.79,0.75,8
-Data Science,Problem Solving,1373,1032.7,20.75,2.78,0.75,9
-Data Science,Matplotlib,1383,1027.8,20.9,2.77,0.74,10
-Data Science,Plotly,1376,1026.2,20.79,2.76,0.75,11
-Data Science,Git,1357,1019.4,20.5,2.75,0.75,12
-Data Science,Regression,1358,1018.9,20.52,2.74,0.75,13
-Data Science,Classification,1365,1016.1,20.63,2.74,0.74,14
-Data Science,Hypothesis Testing,1349,1012.7,20.38,2.73,0.75,15
-Data Science,Seaborn,1351,1011.9,20.41,2.73,0.75,16
-Data Science,Data Visualization,1344,1011.0,20.31,2.72,0.75,17
-Data Science,Spark,1327,1010.8,20.05,2.72,0.76,18
-Data Science,Tableau,1329,1010.2,20.08,2.72,0.76,19
-Data Science,NumPy,1341,1007.1,20.26,2.71,0.75,20
-Data Science,Debugging,1346,1007.1,20.34,2.71,0.75,20
-Data Science,Data Cleaning,1332,1003.6,20.13,2.7,0.75,21
-Data Science,Statistical Modeling,1346,1003.5,20.34,2.7,0.75,22
-Data Science,Clustering,1342,1002.4,20.28,2.7,0.75,23
-Data Science,Code Review,1336,1001.0,20.19,2.7,0.75,24
-Data Science,Looker,1346,998.6,20.34,2.69,0.74,25
-Data Science,Testing,1332,992.4,20.13,2.67,0.75,26
-Data Science,Time Series Analysis,1319,990.8,19.93,2.67,0.75,27
-Data Science,Team Collaboration,1321,988.6,19.96,2.66,0.75,28
-Data Science,Critical Thinking,1320,976.1,19.95,2.63,0.74,29
-Data Science,Forecasting,1306,975.1,19.73,2.63,0.75,30
-Data Science,Documentation,1299,967.0,19.63,2.6,0.74,31
-Data Science,Agile Methodology,1277,950.2,19.3,2.56,0.74,32
-Data Science,A/B Testing,1223,910.3,18.48,2.45,0.74,33
-Data Science,SQL,887,735.8,13.4,1.98,0.83,34
-Data Science,Python,850,716.5,12.84,1.93,0.84,35
-Data Science,Machine Learning,853,707.5,12.89,1.91,0.83,36
-Data Science,Exploratory Data Analysis,881,673.8,13.31,1.81,0.76,37
-DevOps,Docker,2156,1484.0,46.51,5.91,0.69,1
-DevOps,Containerization,2113,1439.3,45.58,5.73,0.68,2
-DevOps,Infrastructure as Code,2095,1410.7,45.19,5.62,0.67,3
-DevOps,Kubernetes,1846,1296.8,39.82,5.17,0.7,4
-DevOps,CI/CD,1766,1217.7,38.09,4.85,0.69,5
-DevOps,Monitoring,1712,1161.9,36.93,4.63,0.68,6
-DevOps,AWS,808,664.6,17.43,2.65,0.82,7
-DevOps,Linux,783,647.2,16.89,2.58,0.83,8
-DevOps,Jenkins,772,637.5,16.65,2.54,0.83,9
-DevOps,Team Collaboration,752,627.0,16.22,2.5,0.83,10
-DevOps,Prometheus,761,618.5,16.42,2.46,0.81,11
-DevOps,Agile Methodology,758,616.4,16.35,2.46,0.81,12
-DevOps,Debugging,750,614.9,16.18,2.45,0.82,13
-DevOps,GitOps,738,610.5,15.92,2.43,0.83,14
-DevOps,Git,743,607.5,16.03,2.42,0.82,15
-DevOps,Azure,740,606.4,15.96,2.42,0.82,16
-DevOps,Critical Thinking,733,602.7,15.81,2.4,0.82,17
-DevOps,GitHub Actions,737,602.4,15.9,2.4,0.82,18
-DevOps,Grafana,731,598.5,15.77,2.38,0.82,19
-DevOps,Testing,734,597.9,15.83,2.38,0.81,20
-DevOps,GCP,722,593.8,15.57,2.37,0.82,21
-DevOps,Problem Solving,721,589.5,15.55,2.35,0.82,22
-DevOps,ELK Stack,722,588.2,15.57,2.34,0.81,23
-DevOps,Communication Skills,708,584.7,15.27,2.33,0.83,24
-DevOps,ArgoCD,715,583.9,15.42,2.33,0.82,25
-DevOps,Datadog,707,581.4,15.25,2.32,0.82,26
-DevOps,Ansible,709,580.1,15.29,2.31,0.82,27
-DevOps,Performance Optimization,707,577.2,15.25,2.3,0.82,28
-DevOps,Helm,699,577.1,15.08,2.3,0.83,29
-DevOps,Code Review,697,576.1,15.03,2.3,0.83,30
-DevOps,Shell Scripting,707,573.0,15.25,2.28,0.81,31
-DevOps,Documentation,704,571.1,15.19,2.28,0.81,32
-DevOps,Istio,690,564.2,14.88,2.25,0.82,33
-DevOps,New Relic,657,529.1,14.17,2.11,0.81,34
-DevOps,Terraform,372,369.6,8.02,1.47,0.99,35
-Software Engineering,Debugging,3856,2482.8,23.99,3.19,0.64,1
-Software Engineering,Design Patterns,3845,2480.8,23.92,3.19,0.65,2
-Software Engineering,MongoDB,3835,2462.7,23.86,3.16,0.64,3
-Software Engineering,Agile Methodology,3808,2459.2,23.69,3.16,0.65,4
-Software Engineering,Java,3808,2454.1,23.69,3.15,0.64,5
-Software Engineering,REST,3802,2451.6,23.65,3.15,0.64,6
-Software Engineering,Microservices,3790,2451.2,23.58,3.15,0.65,7
-Software Engineering,Performance Optimization,3824,2449.9,23.79,3.15,0.64,8
-Software Engineering,Concurrency,3806,2446.5,23.68,3.14,0.64,9
-Software Engineering,OOP,3777,2440.3,23.5,3.13,0.65,10
-Software Engineering,Critical Thinking,3790,2435.8,23.58,3.13,0.64,11
-Software Engineering,Problem Solving,3783,2433.7,23.53,3.12,0.64,12
-Software Engineering,Code Review,3770,2432.6,23.45,3.12,0.65,13
-Software Engineering,C++,3775,2429.0,23.49,3.12,0.64,14
-Software Engineering,Spring Boot,3768,2428.0,23.44,3.12,0.64,15
-Software Engineering,Agile,3771,2426.9,23.46,3.12,0.64,16
-Software Engineering,Flask,3771,2423.6,23.46,3.11,0.64,17
-Software Engineering,Database Design,3771,2420.6,23.46,3.11,0.64,18
-Software Engineering,System Design,3772,2420.0,23.47,3.11,0.64,19
-Software Engineering,Django,3736,2417.2,23.24,3.1,0.65,20
-Software Engineering,Python,3756,2410.8,23.37,3.1,0.64,21
-Software Engineering,Git,3726,2409.4,23.18,3.09,0.65,22
-Software Engineering,Integration Testing,3748,2406.0,23.32,3.09,0.64,23
-Software Engineering,SQL,3741,2404.4,23.27,3.09,0.64,24
-Software Engineering,Unit Testing,3712,2394.3,23.09,3.07,0.65,25
-Software Engineering,Team Collaboration,3697,2378.8,23.0,3.05,0.64,26
-Software Engineering,Communication Skills,3706,2378.4,23.06,3.05,0.64,27
-Software Engineering,Documentation,3690,2375.1,22.96,3.05,0.64,28
-Software Engineering,Testing,3694,2368.4,22.98,3.04,0.64,29
-Software Engineering,API Development,3700,2364.9,23.02,3.04,0.64,30
-Software Engineering,Scrum,3665,2361.3,22.8,3.03,0.64,31
-Software Engineering,Algorithms,2039,1398.6,12.69,1.8,0.69,32
-Software Engineering,Data Structures,2045,1385.9,12.72,1.78,0.68,33
-Web Development,Responsive Design,696,500.3,22.88,3.13,0.72,1
-Web Development,Critical Thinking,690,497.7,22.68,3.12,0.72,2
-Web Development,Code Review,684,496.8,22.49,3.11,0.73,3
-Web Development,TypeScript,666,487.3,21.89,3.05,0.73,4
-Web Development,Problem Solving,668,482.0,21.96,3.02,0.72,5
-Web Development,Testing,663,481.7,21.79,3.02,0.73,6
-Web Development,HTML,670,481.2,22.02,3.01,0.72,7
-Web Development,CSS,648,478.2,21.3,2.99,0.74,8
-Web Development,Next.js,654,477.5,21.5,2.99,0.73,9
-Web Development,Authentication,667,476.0,21.93,2.98,0.71,10
-Web Development,MongoDB,663,475.5,21.79,2.98,0.72,11
-Web Development,Express.js,647,473.0,21.27,2.96,0.73,12
-Web Development,Git,653,472.1,21.47,2.96,0.72,13
-Web Development,Angular,648,468.7,21.3,2.94,0.72,14
-Web Development,Vuex,646,467.6,21.24,2.93,0.72,15
-Web Development,Performance Optimization,652,466.2,21.43,2.92,0.72,16
-Web Development,GraphQL,645,465.0,21.2,2.91,0.72,17
-Web Development,Communication Skills,641,463.4,21.07,2.9,0.72,18
-Web Development,Documentation,631,462.4,20.74,2.9,0.73,19
-Web Development,Redux,640,459.7,21.04,2.88,0.72,20
-Web Development,JWT,638,459.1,20.97,2.88,0.72,21
-Web Development,Team Collaboration,641,459.0,21.07,2.87,0.72,22
-Web Development,Agile Methodology,636,458.9,20.91,2.87,0.72,23
-Web Development,Web Performance,631,454.4,20.74,2.85,0.72,24
-Web Development,JavaScript,625,454.0,20.55,2.84,0.73,25
-Web Development,SASS,629,454.0,20.68,2.84,0.72,25
-Web Development,Vue.js,628,453.5,20.64,2.84,0.72,26
-Web Development,Webpack,620,450.8,20.38,2.82,0.73,27
-Web Development,Tailwind CSS,617,445.9,20.28,2.79,0.72,28
-Web Development,PWAs,609,445.3,20.02,2.79,0.73,29
-Web Development,Debugging,606,444.3,19.92,2.78,0.73,30
-Web Development,PostgreSQL,618,442.6,20.32,2.77,0.72,31
-Web Development,React,425,341.1,13.97,2.14,0.8,32
-Web Development,REST APIs,434,337.1,14.27,2.11,0.78,33
-Web Development,Node.js,431,334.8,14.17,2.1,0.78,34
+domain,skill,frequency,weighted_freq,pct_jobs,confidence,rank
+AI/ML,LangChain,603,478.4,21.83,0.79,1
+AI/ML,MLOps,594,474.7,21.51,0.8,2
+AI/ML,Prompt Engineering,593,472.9,21.47,0.8,3
+AI/ML,LLM,576,467.1,20.85,0.81,4
+AI/ML,scikit-learn,577,465.1,20.89,0.81,5
+AI/ML,Team Collaboration,571,459.0,20.67,0.8,6
+AI/ML,Transformers,570,458.1,20.64,0.8,7
+AI/ML,Generative AI,566,454.3,20.49,0.8,8
+AI/ML,Code Review,572,451.9,20.71,0.79,9
+AI/ML,Hyperparameter Tuning,567,444.0,20.53,0.78,10
+AI/ML,Feature Engineering,554,443.8,20.06,0.8,11
+AI/ML,Git,554,441.2,20.06,0.8,12
+AI/ML,GPT,546,437.7,19.77,0.8,13
+AI/ML,Reinforcement Learning,541,437.5,19.59,0.81,14
+AI/ML,Keras,538,437.2,19.48,0.81,15
+AI/ML,Performance Optimization,548,437.1,19.84,0.8,16
+AI/ML,Critical Thinking,545,436.6,19.73,0.8,17
+AI/ML,BERT,537,435.9,19.44,0.81,18
+AI/ML,Attention Mechanism,553,435.1,20.02,0.79,19
+AI/ML,Agile Methodology,549,434.9,19.88,0.79,20
+AI/ML,Model Evaluation,550,434.7,19.91,0.79,21
+AI/ML,Data Preprocessing,532,432.9,19.26,0.81,22
+AI/ML,TensorFlow,499,431.9,18.07,0.87,23
+AI/ML,Model Training,538,430.9,19.48,0.8,24
+AI/ML,Problem Solving,526,425.6,19.04,0.81,25
+AI/ML,Communication Skills,537,425.5,19.44,0.79,26
+AI/ML,Deep Learning,475,423.9,17.2,0.89,27
+AI/ML,Debugging,531,420.4,19.23,0.79,28
+AI/ML,Testing,536,418.0,19.41,0.78,29
+AI/ML,Documentation,521,415.6,18.86,0.8,30
+AI/ML,NLP,466,406.8,16.87,0.87,31
+AI/ML,OpenCV,513,406.7,18.57,0.79,32
+AI/ML,Transfer Learning,519,405.9,18.79,0.78,33
+AI/ML,Python,507,404.6,18.36,0.8,34
+AI/ML,PyTorch,436,380.1,15.79,0.87,35
+AI/ML,Neural Networks,437,374.2,15.82,0.86,36
+AI/ML,Hugging Face,478,371.1,17.31,0.78,37
+AI/ML,Computer Vision,392,337.0,14.19,0.86,38
+AI/ML,RNN,4,3.6,0.14,0.9,39
+AI/ML,CNN,2,1.6,0.07,0.8,40
+Cloud Computing,Lambda,540,458.4,26.65,0.85,1
+Cloud Computing,Terraform,520,433.0,25.67,0.83,2
+Cloud Computing,Communication Skills,492,410.4,24.28,0.83,3
+Cloud Computing,S3,486,407.3,23.99,0.84,4
+Cloud Computing,EC2,460,395.6,22.7,0.86,5
+Cloud Computing,Kubernetes,474,391.7,23.4,0.83,6
+Cloud Computing,Documentation,470,389.7,23.2,0.83,7
+Cloud Computing,Critical Thinking,470,389.3,23.2,0.83,8
+Cloud Computing,AWS,427,383.9,21.08,0.9,9
+Cloud Computing,Git,457,382.7,22.56,0.84,10
+Cloud Computing,Testing,456,380.5,22.51,0.83,11
+Cloud Computing,Google Cloud Platform,459,379.8,22.66,0.83,12
+Cloud Computing,Problem Solving,449,370.3,22.16,0.82,13
+Cloud Computing,Serverless,449,369.2,22.16,0.82,14
+Cloud Computing,Agile Methodology,449,366.6,22.16,0.82,15
+Cloud Computing,Route53,446,366.5,22.01,0.82,16
+Cloud Computing,Team Collaboration,444,366.0,21.92,0.82,17
+Cloud Computing,CloudFormation,441,364.8,21.77,0.83,18
+Cloud Computing,Performance Optimization,441,359.3,21.77,0.81,19
+Cloud Computing,Hybrid Cloud,434,355.4,21.42,0.82,20
+Cloud Computing,Debugging,432,354.8,21.32,0.82,21
+Cloud Computing,Cloud Networking,438,353.1,21.62,0.81,22
+Cloud Computing,Virtual Machines,432,351.7,21.32,0.81,23
+Cloud Computing,Load Balancing,433,345.7,21.37,0.8,24
+Cloud Computing,Cloud Architecture,420,345.5,20.73,0.82,25
+Cloud Computing,Infrastructure as Code,385,344.0,19.0,0.89,26
+Cloud Computing,Code Review,408,339.4,20.14,0.83,27
+Cloud Computing,Cloud Cost Optimization,406,338.4,20.04,0.83,28
+Cloud Computing,Cloud Security,383,337.6,18.9,0.88,29
+Cloud Computing,CDN,413,336.5,20.38,0.81,30
+Cloud Computing,Auto Scaling,414,335.3,20.43,0.81,31
+Cloud Computing,Multi-cloud,376,329.0,18.56,0.88,32
+Cloud Computing,Azure,373,322.8,18.41,0.87,33
+Cloud Computing,Cloud Migration,344,300.1,16.98,0.87,34
+Cybersecurity,Security Auditing,741,562.8,23.66,0.76,1
+Cybersecurity,Threat Modeling,717,554.7,22.89,0.77,2
+Cybersecurity,Penetration Testing,711,551.6,22.7,0.78,3
+Cybersecurity,Cloud Security,715,549.1,22.83,0.77,4
+Cybersecurity,Risk Assessment,709,546.8,22.64,0.77,5
+Cybersecurity,Firewalls,716,544.8,22.86,0.76,6
+Cybersecurity,Zero Trust,691,533.4,22.06,0.77,7
+Cybersecurity,OWASP,691,532.3,22.06,0.77,8
+Cybersecurity,Malware Analysis,696,532.2,22.22,0.76,9
+Cybersecurity,Documentation,698,529.7,22.29,0.76,10
+Cybersecurity,Ethical Hacking,691,528.6,22.06,0.76,11
+Cybersecurity,Incident Response,686,528.6,21.9,0.77,11
+Cybersecurity,Problem Solving,690,527.8,22.03,0.76,12
+Cybersecurity,Git,691,523.9,22.06,0.76,13
+Cybersecurity,Code Review,684,519.6,21.84,0.76,14
+Cybersecurity,Performance Optimization,683,518.9,21.81,0.76,15
+Cybersecurity,Debugging,681,518.6,21.74,0.76,16
+Cybersecurity,Vulnerability Assessment,671,518.2,21.42,0.77,17
+Cybersecurity,IDS/IPS,665,514.6,21.23,0.77,18
+Cybersecurity,GDPR,673,513.1,21.49,0.76,19
+Cybersecurity,Agile Methodology,674,512.1,21.52,0.76,20
+Cybersecurity,Testing,665,511.2,21.23,0.77,21
+Cybersecurity,SIEM,674,510.8,21.52,0.76,22
+Cybersecurity,Encryption,668,510.3,21.33,0.76,23
+Cybersecurity,Cryptography,657,509.8,20.98,0.78,24
+Cybersecurity,IAM,672,509.2,21.46,0.76,25
+Cybersecurity,Critical Thinking,673,508.0,21.49,0.75,26
+Cybersecurity,ISO 27001,663,506.1,21.17,0.76,27
+Cybersecurity,DevSecOps,663,504.6,21.17,0.76,28
+Cybersecurity,Communication Skills,660,501.1,21.07,0.76,29
+Cybersecurity,Team Collaboration,654,494.3,20.88,0.76,30
+Cybersecurity,Digital Forensics,657,493.7,20.98,0.75,31
+Cybersecurity,Compliance,470,393.7,15.01,0.84,32
+Cybersecurity,Network Security,469,387.7,14.97,0.83,33
+Cybersecurity,Security Automation,460,373.6,14.69,0.81,34
+Data Science,pandas,1394,1049.5,21.06,0.75,1
+Data Science,Power BI,1383,1042.6,20.9,0.75,2
+Data Science,Hadoop,1390,1041.0,21.0,0.75,3
+Data Science,Statistics,1385,1040.4,20.93,0.75,4
+Data Science,Communication Skills,1398,1039.3,21.12,0.74,5
+Data Science,Performance Optimization,1377,1036.9,20.81,0.75,6
+Data Science,R,1377,1035.6,20.81,0.75,7
+Data Science,Big Data,1373,1034.3,20.75,0.75,8
+Data Science,Problem Solving,1373,1032.7,20.75,0.75,9
+Data Science,Matplotlib,1383,1027.8,20.9,0.74,10
+Data Science,Plotly,1376,1026.2,20.79,0.75,11
+Data Science,Git,1357,1019.4,20.5,0.75,12
+Data Science,Regression,1358,1018.9,20.52,0.75,13
+Data Science,Classification,1365,1016.1,20.63,0.74,14
+Data Science,Hypothesis Testing,1349,1012.7,20.38,0.75,15
+Data Science,Seaborn,1351,1011.9,20.41,0.75,16
+Data Science,Data Visualization,1344,1011.0,20.31,0.75,17
+Data Science,Spark,1327,1010.8,20.05,0.76,18
+Data Science,Tableau,1329,1010.2,20.08,0.76,19
+Data Science,Debugging,1346,1007.1,20.34,0.75,20
+Data Science,NumPy,1341,1007.1,20.26,0.75,20
+Data Science,Data Cleaning,1332,1003.6,20.13,0.75,21
+Data Science,Statistical Modeling,1346,1003.5,20.34,0.75,22
+Data Science,Clustering,1342,1002.4,20.28,0.75,23
+Data Science,Code Review,1336,1001.0,20.19,0.75,24
+Data Science,Looker,1346,998.6,20.34,0.74,25
+Data Science,Testing,1332,992.4,20.13,0.75,26
+Data Science,Time Series Analysis,1319,990.8,19.93,0.75,27
+Data Science,Team Collaboration,1321,988.6,19.96,0.75,28
+Data Science,Critical Thinking,1320,976.1,19.95,0.74,29
+Data Science,Forecasting,1306,975.1,19.73,0.75,30
+Data Science,Documentation,1299,967.0,19.63,0.74,31
+Data Science,Agile Methodology,1277,950.2,19.3,0.74,32
+Data Science,A/B Testing,1223,910.3,18.48,0.74,33
+Data Science,SQL,887,735.8,13.4,0.83,34
+Data Science,Python,850,716.5,12.84,0.84,35
+Data Science,Machine Learning,853,707.5,12.89,0.83,36
+Data Science,Exploratory Data Analysis,881,673.8,13.31,0.76,37
+DevOps,Docker,2156,1484.0,46.51,0.69,1
+DevOps,Containerization,2113,1439.3,45.58,0.68,2
+DevOps,Infrastructure as Code,2095,1410.7,45.19,0.67,3
+DevOps,Kubernetes,1846,1296.8,39.82,0.7,4
+DevOps,CI/CD,1766,1217.7,38.09,0.69,5
+DevOps,Monitoring,1712,1161.9,36.93,0.68,6
+DevOps,AWS,808,664.6,17.43,0.82,7
+DevOps,Linux,783,647.2,16.89,0.83,8
+DevOps,Jenkins,772,637.5,16.65,0.83,9
+DevOps,Team Collaboration,752,627.0,16.22,0.83,10
+DevOps,Prometheus,761,618.5,16.42,0.81,11
+DevOps,Agile Methodology,758,616.4,16.35,0.81,12
+DevOps,Debugging,750,614.9,16.18,0.82,13
+DevOps,GitOps,738,610.5,15.92,0.83,14
+DevOps,Git,743,607.5,16.03,0.82,15
+DevOps,Azure,740,606.4,15.96,0.82,16
+DevOps,Critical Thinking,733,602.7,15.81,0.82,17
+DevOps,GitHub Actions,737,602.4,15.9,0.82,18
+DevOps,Grafana,731,598.5,15.77,0.82,19
+DevOps,Testing,734,597.9,15.83,0.81,20
+DevOps,GCP,722,593.8,15.57,0.82,21
+DevOps,Problem Solving,721,589.5,15.55,0.82,22
+DevOps,ELK Stack,722,588.2,15.57,0.81,23
+DevOps,Communication Skills,708,584.7,15.27,0.83,24
+DevOps,ArgoCD,715,583.9,15.42,0.82,25
+DevOps,Datadog,707,581.4,15.25,0.82,26
+DevOps,Ansible,709,580.1,15.29,0.82,27
+DevOps,Performance Optimization,707,577.2,15.25,0.82,28
+DevOps,Helm,699,577.1,15.08,0.83,29
+DevOps,Code Review,697,576.1,15.03,0.83,30
+DevOps,Shell Scripting,707,573.0,15.25,0.81,31
+DevOps,Documentation,704,571.1,15.19,0.81,32
+DevOps,Istio,690,564.2,14.88,0.82,33
+DevOps,New Relic,657,529.1,14.17,0.81,34
+DevOps,Terraform,372,369.6,8.02,0.99,35
+Software Engineering,Debugging,3856,2482.8,23.99,0.64,1
+Software Engineering,Design Patterns,3845,2480.8,23.92,0.65,2
+Software Engineering,MongoDB,3835,2462.7,23.86,0.64,3
+Software Engineering,Agile Methodology,3808,2459.2,23.69,0.65,4
+Software Engineering,Java,3808,2454.1,23.69,0.64,5
+Software Engineering,REST,3802,2451.6,23.65,0.64,6
+Software Engineering,Microservices,3790,2451.2,23.58,0.65,7
+Software Engineering,Performance Optimization,3824,2449.9,23.79,0.64,8
+Software Engineering,Concurrency,3806,2446.5,23.68,0.64,9
+Software Engineering,OOP,3777,2440.3,23.5,0.65,10
+Software Engineering,Critical Thinking,3790,2435.8,23.58,0.64,11
+Software Engineering,Problem Solving,3783,2433.7,23.53,0.64,12
+Software Engineering,Code Review,3770,2432.6,23.45,0.65,13
+Software Engineering,C++,3775,2429.0,23.49,0.64,14
+Software Engineering,Spring Boot,3768,2428.0,23.44,0.64,15
+Software Engineering,Agile,3771,2426.9,23.46,0.64,16
+Software Engineering,Flask,3771,2423.6,23.46,0.64,17
+Software Engineering,Database Design,3771,2420.6,23.46,0.64,18
+Software Engineering,System Design,3772,2420.0,23.47,0.64,19
+Software Engineering,Django,3736,2417.2,23.24,0.65,20
+Software Engineering,Python,3756,2410.8,23.37,0.64,21
+Software Engineering,Git,3726,2409.4,23.18,0.65,22
+Software Engineering,Integration Testing,3748,2406.0,23.32,0.64,23
+Software Engineering,SQL,3741,2404.4,23.27,0.64,24
+Software Engineering,Unit Testing,3712,2394.3,23.09,0.65,25
+Software Engineering,Team Collaboration,3697,2378.8,23.0,0.64,26
+Software Engineering,Communication Skills,3706,2378.4,23.06,0.64,27
+Software Engineering,Documentation,3690,2375.1,22.96,0.64,28
+Software Engineering,Testing,3694,2368.4,22.98,0.64,29
+Software Engineering,API Development,3700,2364.9,23.02,0.64,30
+Software Engineering,Scrum,3665,2361.3,22.8,0.64,31
+Software Engineering,Algorithms,2039,1398.6,12.69,0.69,32
+Software Engineering,Data Structures,2045,1385.9,12.72,0.68,33
+Web Development,Responsive Design,696,500.3,22.88,0.72,1
+Web Development,Critical Thinking,690,497.7,22.68,0.72,2
+Web Development,Code Review,684,496.8,22.49,0.73,3
+Web Development,TypeScript,666,487.3,21.89,0.73,4
+Web Development,Problem Solving,668,482.0,21.96,0.72,5
+Web Development,Testing,663,481.7,21.79,0.73,6
+Web Development,HTML,670,481.2,22.02,0.72,7
+Web Development,CSS,648,478.2,21.3,0.74,8
+Web Development,Next.js,654,477.5,21.5,0.73,9
+Web Development,Authentication,667,476.0,21.93,0.71,10
+Web Development,MongoDB,663,475.5,21.79,0.72,11
+Web Development,Express.js,647,473.0,21.27,0.73,12
+Web Development,Git,653,472.1,21.47,0.72,13
+Web Development,Angular,648,468.7,21.3,0.72,14
+Web Development,Vuex,646,467.6,21.24,0.72,15
+Web Development,Performance Optimization,652,466.2,21.43,0.72,16
+Web Development,GraphQL,645,465.0,21.2,0.72,17
+Web Development,Communication Skills,641,463.4,21.07,0.72,18
+Web Development,Documentation,631,462.4,20.74,0.73,19
+Web Development,Redux,640,459.7,21.04,0.72,20
+Web Development,JWT,638,459.1,20.97,0.72,21
+Web Development,Team Collaboration,641,459.0,21.07,0.72,22
+Web Development,Agile Methodology,636,458.9,20.91,0.72,23
+Web Development,Web Performance,631,454.4,20.74,0.72,24
+Web Development,SASS,629,454.0,20.68,0.72,25
+Web Development,JavaScript,625,454.0,20.55,0.73,25
+Web Development,Vue.js,628,453.5,20.64,0.72,26
+Web Development,Webpack,620,450.8,20.38,0.73,27
+Web Development,Tailwind CSS,617,445.9,20.28,0.72,28
+Web Development,PWAs,609,445.3,20.02,0.73,29
+Web Development,Debugging,606,444.3,19.92,0.73,30
+Web Development,PostgreSQL,618,442.6,20.32,0.72,31
+Web Development,React,425,341.1,13.97,0.8,32
+Web Development,REST APIs,434,337.1,14.27,0.78,33
+Web Development,Node.js,431,334.8,14.17,0.78,34

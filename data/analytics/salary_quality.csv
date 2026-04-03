@@ -1,4 +1,4 @@
-quality_source,count,total_weight,percentage,weighted_percentage
-generated_refined,9026,21568.2,23.57,90.71
-original,1917,2007.0,5.01,8.44
-generated,101,201.6,0.26,0.85
+salary_quality,count,weight,pct,weighted_pct
+generated,336,201.6,0.88,0.85
+generated_refined,35947,21568.2,93.88,90.71
+original,2007,2007.0,5.24,8.44

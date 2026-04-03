@@ -1,0 +1,211 @@
+domain,keyword,frequency,weighted_freq,pct_jobs,weighted_pct,rank
+AI/ML,experience,1973,1709.8,71.43,1.0,1
+AI/ML,develop,2020,1493.7,73.14,0.88,2
+AI/ML,machine,2008,1481.7,72.7,0.87,3
+AI/ML,engineer,1981,1460.7,71.72,0.86,4
+AI/ML,solution,1938,1411.7,70.17,0.83,5
+AI/ML,learning,1870,1356.0,67.7,0.79,6
+AI/ML,work,1608,1344.9,58.22,0.79,7
+AI/ML,team,1559,1287.5,56.44,0.75,8
+AI/ML,model,1801,1274.7,65.21,0.75,9
+AI/ML,implement,1663,1136.7,60.21,0.67,10
+AI/ML,include,1358,1094.9,49.17,0.64,11
+AI/ML,design,1349,1085.8,48.84,0.64,12
+AI/ML,responsibility,1342,1078.9,48.59,0.63,13
+AI/ML,system,1323,1059.8,47.9,0.62,14
+AI/ML,deploy,1583,1056.7,57.31,0.62,15
+AI/ML,computer,1298,1034.8,46.99,0.61,16
+AI/ML,skill,1011,1011.0,36.6,0.59,17
+AI/ML,production,1492,965.7,54.02,0.57,18
+AI/ML,year,964,964.0,34.9,0.57,19
+AI/ML,business,1202,938.9,43.52,0.55,20
+AI/ML,strong,1177,913.8,42.61,0.54,21
+AI/ML,problem,1135,871.9,41.09,0.51,22
+AI/ML,build,1118,869.6,40.48,0.51,23
+AI/ML,solve,1067,803.9,38.63,0.47,24
+AI/ML,responsible,1041,777.8,37.69,0.46,25
+AI/ML,candidate,1030,766.8,37.29,0.45,26
+AI/ML,complex,1023,759.9,37.04,0.45,27
+AI/ML,lead,999,741.3,36.17,0.43,28
+AI/ML,seek,997,733.8,36.1,0.43,29
+AI/ML,performance,984,720.9,35.63,0.42,30
+Cloud Computing,experience,1514,1357.3,74.73,1.08,1
+Cloud Computing,cloud,1676,1346.7,82.72,1.07,2
+Cloud Computing,design,1515,1185.7,74.78,0.94,3
+Cloud Computing,solution,1418,1088.7,69.99,0.87,4
+Cloud Computing,work,1197,1024.1,59.08,0.82,5
+Cloud Computing,infrastructure,1286,956.7,63.47,0.76,6
+Cloud Computing,team,979,886.6,48.32,0.71,7
+Cloud Computing,include,1052,879.1,51.92,0.7,8
+Cloud Computing,implement,1204,874.7,59.43,0.7,9
+Cloud Computing,application,1015,842.1,50.1,0.67,10
+Cloud Computing,year,842,841.7,41.56,0.67,11
+Cloud Computing,skill,828,828.0,40.87,0.66,12
+Cloud Computing,engineer,973,802.5,48.03,0.64,13
+Cloud Computing,responsibility,967,794.1,47.73,0.63,14
+Cloud Computing,development,735,713.7,36.28,0.57,15
+Cloud Computing,azure,870,697.1,42.94,0.55,16
+Cloud Computing,knowledge,669,669.0,33.02,0.53,17
+Cloud Computing,code,834,649.1,41.16,0.52,18
+Cloud Computing,service,636,634.8,31.39,0.51,19
+Cloud Computing,software,656,633.8,32.38,0.5,20
+Cloud Computing,technology,619,618.1,30.55,0.49,21
+Cloud Computing,environment,768,611.6,37.91,0.49,22
+Cloud Computing,good,736,591.6,36.33,0.47,23
+Cloud Computing,aws,763,590.1,37.66,0.47,24
+Cloud Computing,lead,782,580.8,38.6,0.46,25
+Cloud Computing,project,752,579.1,37.12,0.46,26
+Cloud Computing,practice,723,578.6,35.69,0.46,27
+Cloud Computing,security,666,521.6,32.87,0.42,28
+Cloud Computing,seek,666,509.6,32.87,0.41,29
+Cloud Computing,manage,681,508.1,33.61,0.4,30
+Cybersecurity,security,2737,2013.9,87.39,1.2,1
+Cybersecurity,implement,2275,1551.9,72.64,0.92,2
+Cybersecurity,team,1996,1526.5,63.73,0.91,3
+Cybersecurity,work,1848,1477.7,59.0,0.88,4
+Cybersecurity,knowledge,1690,1337.2,53.96,0.79,5
+Cybersecurity,include,1688,1317.7,53.9,0.78,6
+Cybersecurity,incident,2010,1286.9,64.18,0.76,7
+Cybersecurity,threat,2004,1280.9,63.98,0.76,8
+Cybersecurity,experience,1237,1236.7,39.5,0.73,9
+Cybersecurity,require,1589,1236.2,50.73,0.73,10
+Cybersecurity,engineer,1587,1219.4,50.67,0.72,11
+Cybersecurity,responsibility,1547,1176.7,49.39,0.7,12
+Cybersecurity,network,1376,1022.6,43.93,0.61,13
+Cybersecurity,role,1329,976.2,42.43,0.58,14
+Cybersecurity,control,1226,860.9,39.14,0.51,15
+Cybersecurity,look,1202,849.2,38.38,0.5,16
+Cybersecurity,cybersecurity,1177,817.5,37.58,0.49,17
+Cybersecurity,test,1184,813.7,37.8,0.48,18
+Cybersecurity,monitoring,1181,810.7,37.71,0.48,19
+Cybersecurity,automation,1148,790.0,36.65,0.47,20
+Cybersecurity,compliance,1136,778.0,36.27,0.46,21
+Cybersecurity,vulnerability,1140,769.7,36.4,0.46,22
+Cybersecurity,join,1121,768.2,35.79,0.46,23
+Cybersecurity,assessment,1093,722.7,34.9,0.43,24
+Cybersecurity,conduct,1071,700.7,34.2,0.42,25
+Cybersecurity,organizational,1057,686.7,33.75,0.41,26
+Cybersecurity,monitor,1014,661.2,32.38,0.39,27
+Cybersecurity,protect,1008,637.7,32.18,0.38,28
+Cybersecurity,penetration,991,620.7,31.64,0.37,29
+Cybersecurity,asset,983,612.7,31.39,0.36,30
+Data Science,skill,6139,4517.0,92.76,1.64,1
+Data Science,data,5642,4020.0,85.25,1.46,2
+Data Science,strong,5508,3886.0,83.23,1.41,3
+Data Science,sql,5433,3811.0,82.09,1.38,4
+Data Science,role,5296,3674.0,80.02,1.33,5
+Data Science,python,5202,3580.0,78.6,1.3,6
+Data Science,create,5023,3401.0,75.9,1.23,7
+Data Science,model,4961,3339.0,74.96,1.21,8
+Data Science,datum,3804,3093.6,57.48,1.12,9
+Data Science,responsibility,3316,2605.6,50.11,0.94,10
+Data Science,include,3248,2537.6,49.08,0.92,11
+Data Science,team,3427,2498.9,51.78,0.91,12
+Data Science,analysis,3059,2348.6,46.22,0.85,13
+Data Science,require,3259,2346.2,49.24,0.85,14
+Data Science,develop,3082,2170.4,46.57,0.79,15
+Data Science,build,2802,2091.6,42.34,0.76,16
+Data Science,drive,2752,2041.6,41.58,0.74,17
+Data Science,analyze,2734,2023.6,41.31,0.73,18
+Data Science,stakeholder,2725,2014.6,41.18,0.73,19
+Data Science,perform,2701,1990.6,40.81,0.72,20
+Data Science,large,2658,1947.6,40.16,0.71,21
+Data Science,responsible,2843,1931.4,42.96,0.7,22
+Data Science,analytic,2856,1924.0,43.16,0.7,23
+Data Science,visualization,2623,1912.6,39.63,0.69,24
+Data Science,communicate,2576,1865.6,38.92,0.68,25
+Data Science,decision,2565,1854.6,38.76,0.67,26
+Data Science,scale,2555,1844.6,38.61,0.67,27
+Data Science,look,2710,1797.5,40.95,0.65,28
+Data Science,key,2609,1697.4,39.42,0.62,29
+Data Science,scientist,2719,1695.5,41.08,0.61,30
+DevOps,engineer,3686,2594.8,79.51,1.19,1
+DevOps,experience,3071,2535.0,66.24,1.16,2
+DevOps,implement,3182,2089.3,68.64,0.96,3
+DevOps,work,2635,2078.3,56.84,0.95,4
+DevOps,cloud,3105,2022.2,66.98,0.92,5
+DevOps,manage,3098,2005.3,66.82,0.92,6
+DevOps,infrastructure,3030,1937.3,65.36,0.89,7
+DevOps,system,2467,1910.3,53.21,0.87,8
+DevOps,deployment,2980,1887.3,64.28,0.86,9
+DevOps,pipeline,2897,1804.3,62.49,0.82,10
+DevOps,include,2296,1739.3,49.53,0.8,11
+DevOps,responsibility,2278,1721.3,49.14,0.79,12
+DevOps,require,2247,1711.0,48.47,0.78,13
+DevOps,team,2133,1702.2,46.01,0.78,14
+DevOps,devops,2766,1682.6,59.66,0.77,15
+DevOps,kubernetes,2743,1650.3,59.17,0.75,16
+DevOps,solution,2010,1474.0,43.36,0.67,17
+DevOps,process,2013,1456.3,43.42,0.67,18
+DevOps,responsible,1948,1412.0,42.02,0.65,19
+DevOps,maintain,1859,1323.0,40.1,0.6,20
+DevOps,performance,1838,1281.3,39.65,0.59,21
+DevOps,code,1797,1240.3,38.76,0.57,22
+DevOps,build,1774,1238.0,38.27,0.57,23
+DevOps,monitoring,1688,1152.0,36.41,0.53,24
+DevOps,lead,1524,1091.1,32.87,0.5,25
+DevOps,automate,1606,1049.3,34.64,0.48,26
+DevOps,monitor,1586,1029.3,34.21,0.47,27
+DevOps,docker,1582,1025.3,34.12,0.47,28
+DevOps,improve,1556,1010.1,33.56,0.46,29
+DevOps,resource,1479,943.0,31.9,0.43,30
+Software Engineering,software,15312,9608.1,95.26,2.78,1
+Software Engineering,engineer,15094,9396.4,93.9,2.71,2
+Software Engineering,work,8289,5384.3,51.57,1.56,3
+Software Engineering,design,8170,5265.3,50.83,1.52,4
+Software Engineering,system,8169,5264.3,50.82,1.52,5
+Software Engineering,team,8126,5258.8,50.55,1.52,6
+Software Engineering,development,8052,5211.7,50.09,1.51,7
+Software Engineering,responsibility,8009,5104.3,49.83,1.47,8
+Software Engineering,develop,7967,5062.3,49.56,1.46,9
+Software Engineering,include,7925,5020.3,49.3,1.45,10
+Software Engineering,requirement,7794,4994.8,48.49,1.44,11
+Software Engineering,solution,7754,4849.3,48.24,1.4,12
+Software Engineering,quality,7701,4796.3,47.91,1.39,13
+Software Engineering,write,7663,4758.3,47.67,1.37,14
+Software Engineering,strong,7545,4745.8,46.94,1.37,15
+Software Engineering,good,7628,4723.3,47.46,1.36,16
+Software Engineering,high,7619,4714.3,47.4,1.36,17
+Software Engineering,application,7504,4704.5,46.68,1.36,18
+Software Engineering,maintain,7596,4691.3,47.26,1.36,19
+Software Engineering,code,7573,4668.3,47.11,1.35,20
+Software Engineering,implement,7570,4665.3,47.09,1.35,21
+Software Engineering,lead,7530,4661.6,46.85,1.35,22
+Software Engineering,programming,7509,4645.4,46.72,1.34,23
+Software Engineering,practice,7523,4618.3,46.8,1.33,24
+Software Engineering,review,7499,4594.3,46.65,1.33,25
+Software Engineering,service,7372,4569.2,45.86,1.32,26
+Software Engineering,candidate,7358,4558.5,45.78,1.32,27
+Software Engineering,participate,7432,4527.3,46.24,1.31,28
+Software Engineering,language,7360,4496.4,45.79,1.3,29
+Software Engineering,modern,7337,4432.3,45.65,1.28,30
+Web Development,experience,2828,2003.6,92.97,2.08,1
+Web Development,developer,2540,1729.1,83.5,1.79,2
+Web Development,web,2549,1724.6,83.79,1.79,3
+Web Development,application,2504,1679.6,82.31,1.74,4
+Web Development,team,2100,1477.2,69.03,1.53,5
+Web Development,build,2256,1431.6,74.16,1.49,6
+Web Development,responsive,2141,1316.6,70.38,1.37,7
+Web Development,work,1496,1097.6,49.18,1.14,8
+Web Development,design,1446,1036.8,47.53,1.08,9
+Web Development,develop,1414,998.8,46.48,1.04,10
+Web Development,responsibility,1351,935.8,44.41,0.97,11
+Web Development,include,1345,929.8,44.21,0.97,12
+Web Development,service,1304,894.8,42.87,0.93,13
+Web Development,join,1285,875.8,42.24,0.91,14
+Web Development,framework,1261,845.8,41.45,0.88,15
+Web Development,engineering,1243,833.8,40.86,0.87,16
+Web Development,react,1250,824.0,41.09,0.86,17
+Web Development,user,1212,813.6,39.84,0.84,18
+Web Development,responsible,1203,793.8,39.55,0.82,19
+Web Development,lead,1215,790.2,39.94,0.82,20
+Web Development,seek,1196,786.8,39.32,0.82,21
+Web Development,implement,1194,784.8,39.25,0.81,22
+Web Development,create,1186,770.8,38.99,0.8,23
+Web Development,stack,1174,763.9,38.59,0.79,24
+Web Development,ensure,1173,757.8,38.56,0.79,25
+Web Development,api,1171,755.8,38.49,0.78,26
+Web Development,performance,1169,753.8,38.43,0.78,27
+Web Development,rest,1154,738.8,37.94,0.77,28
+Web Development,cross,1149,733.8,37.77,0.76,29
+Web Development,key,1149,733.8,37.77,0.76,29

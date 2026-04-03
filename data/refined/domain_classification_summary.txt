@@ -1,0 +1,155 @@
+================================================================================
+TECHSPHERE ANALYTICS - DOMAIN CLASSIFICATION SUMMARY
+================================================================================
+
+Total CS jobs after validation: 38,290
+Columns: 11
+
+CLASSIFICATION APPROACH:
+----------------------------------------
+1. Strict validation against non-tech keywords (chef, admin, etc.)
+2. CS job indicator check (engineer, developer, etc.)
+3. Domain-specific keyword matching
+4. Priority-based conflict resolution
+
+DOMAIN DISTRIBUTION:
+----------------------------------------
+  Software Engineering:     16,074 ( 42.0%)
+  Data Science        :      6,618 ( 17.3%)
+  DevOps              :      4,636 ( 12.1%)
+  Cybersecurity       :      3,132 (  8.2%)
+  Web Development     :      3,042 (  7.9%)
+  AI/ML               :      2,762 (  7.2%)
+  Cloud Computing     :      2,026 (  5.3%)
+
+YEAR DISTRIBUTION BY DOMAIN:
+----------------------------------------
+domain  AI/ML  Cloud Computing  Cybersecurity  Data Science  DevOps  Software Engineering  Web Development
+year                                                                                                      
+2025.0   2762             2026           3132          6618    4636                 16074             3042
+
+SALARY STATISTICS BY DOMAIN:
+----------------------------------------
+
+AI/ML:
+  Count: 2,762
+  Avg Salary (Min): $111,457.22
+  Median Salary: $120,000.00
+
+Data Science:
+  Count: 6,618
+  Avg Salary (Min): $69,875.67
+  Median Salary: $79,735.00
+
+Cybersecurity:
+  Count: 3,132
+  Avg Salary (Min): $85,554.69
+  Median Salary: $95,975.00
+
+Cloud Computing:
+  Count: 2,026
+  Avg Salary (Min): $83,666.91
+  Median Salary: $100,865.60
+
+DevOps:
+  Count: 4,636
+  Avg Salary (Min): $81,281.39
+  Median Salary: $89,466.55
+
+Web Development:
+  Count: 3,042
+  Avg Salary (Min): $69,962.19
+  Median Salary: $77,715.96
+
+Software Engineering:
+  Count: 16,074
+  Avg Salary (Min): $71,920.06
+  Median Salary: $65,298.89
+
+
+SAMPLE JOB TITLES BY DOMAIN:
+----------------------------------------
+
+AI/ML:
+  1. software development engineer, agi
+  2. software development engineer, agi
+  3. software development engineer , agi customization
+  4. software development engineer, agi information
+  5. software development engineer, amazon robotics (ar)
+  6. software development engineer, frontier ai & robotics
+  7. software development engineer (ml), agi customization
+  8. software development engineer, web information system
+  9. software development engineer, web information system
+  10. software development engineer (ml), agi customization
+
+Data Science:
+  1. software development engineer 2
+  2. data engineer, data application
+  3. staff data engineer
+  4. data engineer i
+  5. senior data engineer
+  6. data scientist
+  7. master data analyst (accounting & finance)
+  8. senior data analyst-accounting/finance
+  9. financial data analyst
+  10. senior data engineer, finance
+
+Cybersecurity:
+  1. software developer/ engineer
+  2. embedded software developer/engineer
+  3. product manager - industrial cybersecurity
+  4. sr. manager, cybersecurity operations
+  5. project manager (cybersecurity)
+  6. government information security engineer
+  7. government information security engineer
+  8. project manager (cybersecurity)
+  9. cno software engineer
+  10. government information security engineer
+
+Cloud Computing:
+  1. software developer / engineer
+  2. senior software development engineer - oci
+  3. senior software development engineer - oci
+  4. senior software development engineer - oci
+  5. senior software development engineer - oci
+  6. senior software development engineer - oci
+  7. senior software development engineer - oci
+  8. senior software development engineer - oci
+  9. senior software development engineer - oci
+  10. senior software development engineer - oci
+
+DevOps:
+  1. software development engineer in test (sdet)
+  2. software development engineer
+  3. senior software development engineer, spb advertiser guidance
+  4. senior software development engineer
+  5. automation engineer - life sciences
+  6. staff engineer - building enclosures
+  7. servicenow hrsd lead developer (hris business partner)- remote
+  8. servicenow hrsd lead developer (hris business partner)- remote
+  9. servicenow hrsd lead developer (hris business partner)- remote
+  10. servicenow hrsd lead developer (hris business partner)- remote
+
+Web Development:
+  1. full stack developer - equities technology
+  2. senior full stack developer lead - inventory management - jersey city
+  3. full stack developer with security clearance
+  4. senior java developer - 3year with extension
+  5. lead full stack developer
+  6. senior web developer
+  7. web developer (php/wordpress)
+  8. web developer (php/wordpress)
+  9. senior web developer
+  10. web developer
+
+Software Engineering:
+  1. software developer engineer
+  2. software development engineer in test
+  3. senior software development engineer
+  4. software development engineer, ai
+  5. senior software development engineer, crew
+  6. software developer engineer - ios, ring
+  7. software developer engineer - ios, ring
+  8. senior software development engineer, android
+  9. senior software development engineer, android
+  10. senior software development engineer, android
