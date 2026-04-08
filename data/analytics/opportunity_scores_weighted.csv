@@ -1,8 +1,8 @@
-domain,opportunity_score,comp_confidence,rank
-AI/ML,0.3922,0.757,1
-Cloud Computing,0.3291,0.768,2
-Software Engineering,0.3168,0.699,3
-Data Science,0.2927,0.732,4
-DevOps,0.2617,0.738,5
-Cybersecurity,0.2183,0.741,6
-Web Development,0.0589,0.726,7
+domain,opportunity_score,base_opportunity,safety_score,layoff_exposure_score,risk_tier,strategic_recommendation,comp_confidence,rank
+AI/ML,0.4514,0.3885611556398343,0.64,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.757,1
+Cloud Computing,0.3861,0.3214285714285714,0.58,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.768,2
+Software Engineering,0.3699,0.33991849117262196,0.46,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.699,3
+Data Science,0.3499,0.29987483767997963,0.5,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.732,4
+DevOps,0.3395,0.2659879570736598,0.56,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.738,5
+Cybersecurity,0.3207,0.22099308670977771,0.6200000000000001,0.5,MEDIUM_RISK,MONITOR - Wait for clearer signals,0.741,6
+Web Development,0.1557,0.060874298759095946,0.43999999999999995,0.5,MEDIUM_RISK,"AVOID - Low opportunity, high risk",0.726,7

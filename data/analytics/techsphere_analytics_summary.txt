@@ -1,0 +1,54 @@
+================================================================================
+TECHSPHERE ANALYTICS v5.1 - REAL LAYOFFS DATA EDITION
+================================================================================
+
+Generated: 2026-04-08 17:06:23
+Total job records: 38,290
+Parallel workers: 6
+
+================================================================================
+RISK-ADJUSTED OPPORTUNITY RANKINGS
+================================================================================
+
+  1. AI/ML                    
+     Opportunity Score: 0.4514
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  2. Cloud Computing          
+     Opportunity Score: 0.3861
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  3. Software Engineering     
+     Opportunity Score: 0.3699
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  4. Data Science             
+     Opportunity Score: 0.3499
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  5. DevOps                   
+     Opportunity Score: 0.3395
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  6. Cybersecurity            
+     Opportunity Score: 0.3207
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: MONITOR - Wait for clearer signals
+
+  7. Web Development          
+     Opportunity Score: 0.1557
+     Layoff Exposure: 0.500
+     Risk Tier: MEDIUM_RISK
+     Recommendation: AVOID - Low opportunity, high risk
+
