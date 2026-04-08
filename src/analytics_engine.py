@@ -1,16 +1,6 @@
 """
 analytics_engine_spacy.py - PRODUCTION Job Market Analytics Engine v5.1
-"REAL LAYOFFS DATA EDITION"
-
-NEW IN v5.1:
-✅ REAL layoffs data from layoffs.xlsx (2022-2025 actuals)
-✅ Domain-specific layoff trends with YoY calculations
-✅ Workforce percentage impact (actual vs estimated)
-✅ 2026 outlook integration from compiled sources
-✅ Company-level layoff events for validation
-
-Author: TechSphere Analytics Team
-Date: 2026-04-08
+"REAL LAYOFFS DATA EDITION" - FIXED FOR YOUR EXCEL STRUCTURE
 """
 
 import pandas as pd
@@ -63,18 +53,14 @@ QUALITY_WEIGHTS = {
     'enhanced_generated': 0.7, 'generated_salary': 0.5,
 }
 
-# ============================================================
-# DOMAIN MAPPING
-# ============================================================
-
+# Domain mapping (Excel names -> internal names)
 DOMAIN_MAPPING = {
     'Software Engineering': 'Software Engineering',
+    'Web Development\n(Front-end / Full-stack)': 'Web Development',
     'Web Development (Front-end / Full-stack)': 'Web Development',
-    'Web Development': 'Web Development',
     'DevOps / Platform Eng.': 'DevOps',
     'Data Science': 'Data Science',
     'AI / ML Engineering': 'AI/ML',
-    'AI/ML': 'AI/ML',
     'Cybersecurity': 'Cybersecurity',
     'Cloud Computing': 'Cloud Computing'
 }
@@ -154,7 +140,7 @@ def process_domain_keywords(domain, texts, weights, n=30):
 
 
 # ============================================================
-# REAL LAYOFFS DATA INTEGRATOR
+# REAL LAYOFFS DATA INTEGRATOR - FIXED FOR YOUR EXCEL
 # ============================================================
 
 class RealLayoffsIntegrator:
@@ -164,7 +150,6 @@ class RealLayoffsIntegrator:
         self.layoffs_file = layoffs_file
         self.domain_summary = None
         self.company_details = None
-        self.yoy_trends = None
         self.results = {
             'layoff_exposure': None,
             'ai_resilience': None,
@@ -178,20 +163,17 @@ class RealLayoffsIntegrator:
         logger.info("Loading real layoffs data from layoffs.xlsx...")
         
         try:
-            # Try to load with openpyxl engine
-            excel_file = pd.ExcelFile(self.layoffs_file, engine='openpyxl')
-            sheet_names = excel_file.sheet_names
-            logger.info(f"  Found sheets: {sheet_names}")
-            
-            # Load Domain Summary sheet
+            # Load Domain Summary sheet - skip first row (the note), use row 1 as headers
+            # Row 0 = "Sources: ..." note
+            # Row 1 = actual headers
             self.domain_summary = pd.read_excel(
                 self.layoffs_file, 
                 sheet_name='Domain Summary',
-                header=1,
+                header=1,  # Use row 1 (0-indexed) as headers
                 engine='openpyxl'
             )
             
-            # Load Company Detail sheet
+            # Load Company Detail sheet - similar structure
             self.company_details = pd.read_excel(
                 self.layoffs_file,
                 sheet_name='Company Detail',
@@ -199,15 +181,7 @@ class RealLayoffsIntegrator:
                 engine='openpyxl'
             )
             
-            # Load YoY Trend sheet
-            self.yoy_trends = pd.read_excel(
-                self.layoffs_file,
-                sheet_name='YoY Trend',
-                header=1,
-                engine='openpyxl'
-            )
-            
-            logger.info(f"  Loaded: {len(self.domain_summary)} domains, {len(self.company_details)} company events")
+            logger.info(f"  Raw domain data shape: {self.domain_summary.shape}")
             
             # Clean and parse the data
             self._clean_domain_summary()
@@ -217,66 +191,101 @@ class RealLayoffsIntegrator:
             
         except Exception as e:
             logger.error(f"Failed to load layoffs data: {e}")
-            logger.warning("Will use fallback estimated risk profiles")
+            import traceback
+            traceback.print_exc()
             self.data_loaded = False
             return False
     
     def _clean_domain_summary(self):
         """Clean and standardize domain summary data."""
-        # Try to identify columns based on content
-        column_mapping = {}
         
-        for col in self.domain_summary.columns:
-            col_str = str(col).strip().lower()
+        # The columns after reading with header=1 should be:
+        # 0: Domain
+        # 1: Approx. Total Workforce (2022)
+        # 2: 2022 Layoffs
+        # 3: 2023 Layoffs
+        # 4: 2024 Layoffs
+        # 5: 2025 Layoffs
+        # 6: Total (2022–25)
+        # 7: % of 2022 Workforce
+        # 8: YoY Change 2024→2025
+        # 9: Trend
+        # 10: Primary Drivers
+        # 11: 2026 Outlook
+        
+        # Get the column names (should be the actual headers)
+        cols = self.domain_summary.columns.tolist()
+        logger.info(f"  Domain summary columns: {cols[:6]}...")
+        
+        # Create a clean dataframe with proper column names
+        clean_data = []
+        
+        for idx, row in self.domain_summary.iterrows():
+            # Skip if domain is NaN or is a header row
+            domain_val = row.iloc[0] if len(row) > 0 else None
+            if pd.isna(domain_val) or str(domain_val).strip() == '' or str(domain_val).strip() == 'Domain':
+                continue
             
-            if 'domain' in col_str:
-                column_mapping[col] = 'domain'
-            elif 'workforce' in col_str or 'total workforce' in col_str:
-                column_mapping[col] = 'workforce_2022'
-            elif col_str == '2022' or col_str.startswith('2022'):
-                column_mapping[col] = 'layoffs_2022'
-            elif col_str == '2023' or col_str.startswith('2023'):
-                column_mapping[col] = 'layoffs_2023'
-            elif col_str == '2024' or col_str.startswith('2024'):
-                column_mapping[col] = 'layoffs_2024'
-            elif col_str == '2025' or col_str.startswith('2025'):
-                column_mapping[col] = 'layoffs_2025'
-            elif 'total' in col_str and 'layoffs' in col_str:
-                column_mapping[col] = 'total_layoffs'
-            elif '%' in col_str:
-                column_mapping[col] = 'pct_workforce'
-            elif 'yoy' in col_str or 'change' in col_str:
-                column_mapping[col] = 'yoy_change'
-            elif 'trend' in col_str:
-                column_mapping[col] = 'trend'
-            elif 'driver' in col_str:
-                column_mapping[col] = 'primary_drivers'
-            elif 'outlook' in col_str:
-                column_mapping[col] = 'outlook_2026'
+            # Extract values
+            domain_raw = str(domain_val).strip()
+            
+            # Get layoffs numbers (columns 2-5)
+            layoffs_2022 = self._safe_numeric(row.iloc[2] if len(row) > 2 else 0)
+            layoffs_2023 = self._safe_numeric(row.iloc[3] if len(row) > 3 else 0)
+            layoffs_2024 = self._safe_numeric(row.iloc[4] if len(row) > 4 else 0)
+            layoffs_2025 = self._safe_numeric(row.iloc[5] if len(row) > 5 else 0)
+            
+            # Get workforce (column 1)
+            workforce = self._safe_numeric(row.iloc[1] if len(row) > 1 else 0)
+            
+            # Get percentage (column 7)
+            pct_workforce = self._safe_numeric(row.iloc[7] if len(row) > 7 else 0)
+            
+            # Get trend and drivers
+            trend = str(row.iloc[9] if len(row) > 9 else '').strip()
+            drivers = str(row.iloc[10] if len(row) > 10 else '').strip()
+            outlook = str(row.iloc[11] if len(row) > 11 else '').strip()
+            
+            # Map domain name
+            domain = DOMAIN_MAPPING.get(domain_raw, domain_raw)
+            
+            # Only include our 7 core domains
+            core_domains = ['Software Engineering', 'Web Development', 'DevOps', 'Data Science', 'AI/ML', 'Cybersecurity', 'Cloud Computing']
+            if domain not in core_domains:
+                continue
+            
+            clean_data.append({
+                'domain_raw': domain_raw,
+                'domain': domain,
+                'workforce_2022': workforce,
+                'layoffs_2022': layoffs_2022,
+                'layoffs_2023': layoffs_2023,
+                'layoffs_2024': layoffs_2024,
+                'layoffs_2025': layoffs_2025,
+                'total_layoffs': layoffs_2022 + layoffs_2023 + layoffs_2024 + layoffs_2025,
+                'pct_workforce': pct_workforce,
+                'trend': trend,
+                'primary_drivers': drivers,
+                'outlook_2026': outlook
+            })
         
-        # Rename columns if mapping exists
-        if column_mapping:
-            self.domain_summary = self.domain_summary.rename(columns=column_mapping)
-        
-        # Ensure required columns exist with fallbacks
-        required_cols = ['domain', 'layoffs_2022', 'layoffs_2023', 'layoffs_2024', 'layoffs_2025']
-        for col in required_cols:
-            if col not in self.domain_summary.columns:
-                self.domain_summary[col] = 0
-        
-        # Clean domain names
-        if 'domain' in self.domain_summary.columns:
-            self.domain_summary['domain_clean'] = self.domain_summary['domain'].astype(str).apply(
-                lambda x: DOMAIN_MAPPING.get(x.strip(), x.strip())
-            )
-        
-        # Convert numeric columns
-        numeric_cols = ['layoffs_2022', 'layoffs_2023', 'layoffs_2024', 'layoffs_2025', 'pct_workforce']
-        for col in numeric_cols:
-            if col in self.domain_summary.columns:
-                self.domain_summary[col] = pd.to_numeric(self.domain_summary[col], errors='coerce').fillna(0)
-        
+        self.domain_summary = pd.DataFrame(clean_data)
         logger.info(f"  Cleaned {len(self.domain_summary)} domain records")
+        logger.info(f"  Domains: {self.domain_summary['domain'].tolist()}")
+    
+    def _safe_numeric(self, value):
+        """Safely convert to numeric."""
+        if pd.isna(value):
+            return 0
+        try:
+            # Handle string percentages like "12%" or "▼"
+            if isinstance(value, str):
+                value = value.replace('%', '').replace('▼', '').replace('▲', '').strip()
+                if value == '':
+                    return 0
+            return float(value)
+        except (ValueError, TypeError):
+            return 0
     
     def compute_layoff_exposure_from_real_data(self) -> pd.DataFrame:
         """Calculate layoff exposure using ACTUAL 2022-2025 data."""
@@ -285,40 +294,35 @@ class RealLayoffsIntegrator:
         exposures = []
         
         for _, row in self.domain_summary.iterrows():
-            domain = row.get('domain_clean', row.get('domain', 'Unknown'))
+            domain = row['domain']
             
-            # Get layoff numbers with safe defaults
-            layoffs_2022 = float(row.get('layoffs_2022', 0))
-            layoffs_2023 = float(row.get('layoffs_2023', 0))
-            layoffs_2024 = float(row.get('layoffs_2024', 0))
-            layoffs_2025 = float(row.get('layoffs_2025', 0))
+            # Get layoff numbers
+            layoffs_2022 = float(row['layoffs_2022'])
+            layoffs_2023 = float(row['layoffs_2023'])
+            layoffs_2024 = float(row['layoffs_2024'])
+            layoffs_2025 = float(row['layoffs_2025'])
+            workforce = float(row['workforce_2022']) if row['workforce_2022'] > 0 else 100000
             
-            # Calculate total
-            total_layoffs = layoffs_2022 + layoffs_2023 + layoffs_2024 + layoffs_2025
+            # Calculate layoff rates (percentage of workforce)
+            rate_2022 = (layoffs_2022 / workforce) * 100 if workforce > 0 else 0
+            rate_2023 = (layoffs_2023 / workforce) * 100 if workforce > 0 else 0
+            rate_2024 = (layoffs_2024 / workforce) * 100 if workforce > 0 else 0
+            rate_2025 = (layoffs_2025 / workforce) * 100 if workforce > 0 else 0
             
-            # Get workforce if available, otherwise estimate
-            workforce = float(row.get('workforce_2022', total_layoffs * 50 if total_layoffs > 0 else 100000))
-            
-            # Calculate layoff rates
-            rate_2022 = layoffs_2022 / workforce if workforce > 0 else 0
-            rate_2023 = layoffs_2023 / workforce if workforce > 0 else 0
-            rate_2024 = layoffs_2024 / workforce if workforce > 0 else 0
-            rate_2025 = layoffs_2025 / workforce if workforce > 0 else 0
-            
+            # Peak rate
             peak_rate = max(rate_2022, rate_2023, rate_2024, rate_2025)
             
-            # Calculate YoY change
-            yoy_change = ((rate_2025 - rate_2024) / rate_2024 * 100) if rate_2024 > 0 else 0
+            # YoY change
+            yoy_change = rate_2025 - rate_2024
             
-            # Composite exposure score (0-1 scale)
+            # Composite exposure score (normalized 0-1)
+            # Weighted: recent year 50%, peak 30%, worsening trend 20%
             exposure_score = (
-                (rate_2025 * 0.5) +      # Most recent year matters most
-                (peak_rate * 0.3) +       # Historical peak matters
-                (max(0, yoy_change) * 0.01 * 0.2)  # Worsening trend penalty
+                (rate_2025 / 10) * 0.5 +      # Normalize rate (max ~10%)
+                (peak_rate / 10) * 0.3 +
+                (max(0, yoy_change) / 10) * 0.2
             )
-            
-            # Normalize to 0-1 scale (multiply by 10 since rates are ~0.01-0.05)
-            exposure_score = min(1.0, exposure_score * 12)
+            exposure_score = min(1.0, exposure_score)
             
             # Determine risk tier
             if exposure_score < 0.25:
@@ -328,30 +332,34 @@ class RealLayoffsIntegrator:
             else:
                 risk_tier = 'HIGH_RISK'
             
-            # Calculate percentage of workforce
-            pct_workforce = (total_layoffs / workforce * 100) if workforce > 0 else 0
+            # Calculate total percentage
+            total_pct = (row['total_layoffs'] / workforce * 100) if workforce > 0 else 0
             
             exposures.append({
                 'domain': domain,
                 'layoff_exposure_score': round(exposure_score, 3),
                 'risk_tier': risk_tier,
-                'actual_layoffs_total': int(total_layoffs),
+                'actual_layoffs_total': int(row['total_layoffs']),
                 'actual_layoffs_2025': int(layoffs_2025),
-                'pct_workforce_laid_off': round(pct_workforce, 2),
-                'trend_direction': 'Improving' if yoy_change < 0 else 'Worsening',
-                'outlook_2026': str(row.get('outlook_2026', 'Stabilizing'))[:200],
-                'primary_drivers': str(row.get('primary_drivers', ''))[:300]
+                'pct_workforce_laid_off': round(total_pct, 2),
+                'trend_direction': 'Improving' if yoy_change < 0 else 'Worsening' if yoy_change > 0 else 'Stable',
+                'outlook_2026': row['outlook_2026'][:200] if len(row['outlook_2026']) > 0 else 'Stabilizing',
+                'primary_drivers': row['primary_drivers'][:300] if len(row['primary_drivers']) > 0 else ''
             })
         
         df_exposure = pd.DataFrame(exposures)
-        # Filter to our 7 core domains
-        core_domains = ['AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'Data Science', 'Software Engineering', 'Web Development']
-        df_exposure = df_exposure[df_exposure['domain'].isin(core_domains)]
-        
         self.results['layoff_exposure'] = df_exposure
         
         df_exposure.to_csv(OUTPUT_DIR / 'layoff_exposure_scores.csv', index=False)
         logger.info(f"  [OK] layoff_exposure_scores.csv ({len(df_exposure)} domains)")
+        
+        # Print to console for verification
+        print("\n" + "-" * 60)
+        print("LAYOFF EXPOSURE SCORES (from your Excel data)")
+        print("-" * 60)
+        for _, row in df_exposure.iterrows():
+            print(f"  {row['domain']:25s}: Score={row['layoff_exposure_score']:.3f} | {row['risk_tier']} | 2025 Layoffs={row['actual_layoffs_2025']:,}")
+        print("-" * 60)
         
         return df_exposure
     
@@ -382,9 +390,9 @@ class RealLayoffsIntegrator:
                 
                 # Adjust based on outlook
                 outlook = str(row.get('outlook_2026', '')).lower()
-                if 'rebounding' in outlook or 'resilient' in outlook or 'growing' in outlook:
+                if any(word in outlook for word in ['rebounding', 'resilient', 'growing', 'demand']):
                     resilience += 0.10
-                if 'declining' in outlook or 'saturated' in outlook or 'risk' in outlook:
+                if any(word in outlook for word in ['declining', 'saturated', 'risk', 'shrinking']):
                     resilience -= 0.15
                 
                 # Adjust based on trend
@@ -503,35 +511,19 @@ class RealLayoffsIntegrator:
     def get_company_layoff_events(self) -> pd.DataFrame:
         """Return company-level layoff events."""
         if self.company_details is not None and len(self.company_details) > 0:
-            return self.company_details.head(50)  # Return top 50 events
+            # Clean company data similarly
+            company_data = []
+            for _, row in self.company_details.iterrows():
+                if pd.notna(row.iloc[0]) and row.iloc[0] not in ['Company', 'Note:', None]:
+                    company_data.append({
+                        'company': str(row.iloc[0]) if pd.notna(row.iloc[0]) else '',
+                        'domain': str(row.iloc[1]) if len(row) > 1 and pd.notna(row.iloc[1]) else '',
+                        'year': int(row.iloc[2]) if len(row) > 2 and pd.notna(row.iloc[2]) else 0,
+                        'layoffs': int(row.iloc[3]) if len(row) > 3 and pd.notna(row.iloc[3]) else 0,
+                        'reason': str(row.iloc[6]) if len(row) > 6 and pd.notna(row.iloc[6]) else ''
+                    })
+            return pd.DataFrame(company_data)
         return pd.DataFrame()
-    
-    def generate_yoy_layoff_chart_data(self) -> pd.DataFrame:
-        """Generate YoY layoff data for visualization."""
-        yoy_data = []
-        core_domains = ['AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'Data Science', 'Software Engineering', 'Web Development']
-        
-        for _, row in self.domain_summary.iterrows():
-            domain = row.get('domain_clean', row.get('domain', 'Unknown'))
-            if domain not in core_domains:
-                continue
-                
-            for year in [2022, 2023, 2024, 2025]:
-                layoffs = row.get(f'layoffs_{year}', 0)
-                if pd.isna(layoffs):
-                    layoffs = 0
-                yoy_data.append({
-                    'domain': domain,
-                    'year': year,
-                    'layoffs': int(layoffs)
-                })
-        
-        df_yoy = pd.DataFrame(yoy_data)
-        if not df_yoy.empty:
-            df_yoy.to_csv(OUTPUT_DIR / 'yoy_layoff_trends.csv', index=False)
-            self.results['yoy_trends'] = df_yoy
-        
-        return df_yoy
     
     def run_all(self, job_df: pd.DataFrame = None):
         """Execute all risk analytics with real layoffs data."""
@@ -544,13 +536,10 @@ class RealLayoffsIntegrator:
             else:
                 junior = None
             
-            yoy_data = self.generate_yoy_layoff_chart_data()
-            
             return {
                 'exposure': exposure,
                 'resilience': resilience,
                 'junior_bottleneck': junior,
-                'yoy_trends': yoy_data,
                 'company_events': self.company_details
             }
         else:
@@ -558,7 +547,7 @@ class RealLayoffsIntegrator:
     
     def _get_fallback_profiles(self, job_df=None):
         """Fallback risk profiles if Excel cannot be loaded."""
-        logger.info("Using fallback estimated risk profiles based on market research")
+        logger.info("Using fallback estimated risk profiles")
         
         fallback_data = pd.DataFrame([
             {'domain': 'AI/ML', 'layoff_exposure_score': 0.12, 'risk_tier': 'LOW_RISK', 
@@ -586,7 +575,6 @@ class RealLayoffsIntegrator:
         
         self.results['layoff_exposure'] = fallback_data
         
-        # Resilience data
         resilience_data = pd.DataFrame([
             {'domain': 'AI/ML', 'ai_resilience_score': 0.85, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path', 'action': 'Continue current path'},
             {'domain': 'Cybersecurity', 'ai_resilience_score': 0.80, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path', 'action': 'Continue current path'},
@@ -607,7 +595,6 @@ class RealLayoffsIntegrator:
             'exposure': fallback_data,
             'resilience': resilience_data,
             'junior_bottleneck': junior,
-            'yoy_trends': None,
             'company_events': None
         }
 

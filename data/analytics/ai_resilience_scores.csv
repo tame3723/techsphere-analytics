@@ -1,8 +1,8 @@
 domain,ai_resilience_score,resilience_tier,recommendation,action
-AI/ML,0.85,HIGH_RESILIENCE,Continue current path,Continue current path
-Cybersecurity,0.8,HIGH_RESILIENCE,Continue current path,Continue current path
-Cloud Computing,0.7,HIGH_RESILIENCE,Continue current path,Continue current path
-DevOps,0.65,MEDIUM_RESILIENCE,Learn AI tools,Learn AI tools
-Data Science,0.5,MEDIUM_RESILIENCE,Learn AI tools,Learn AI tools
-Software Engineering,0.4,MEDIUM_RESILIENCE,Learn AI tools,Learn AI tools
-Web Development,0.35,LOW_RESILIENCE,Consider pivoting,Consider pivoting
+Software Engineering,0.55,MEDIUM_RESILIENCE,Learn AI tools and prompt engineering,Learn AI tools and prompt engineering
+Web Development,0.35,LOW_RESILIENCE,Pivot to AI verification/architecture roles,Pivot to AI verification/architecture roles
+DevOps,0.8,HIGH_RESILIENCE,Continue current path - AI augments your role,Continue current path - AI augments your role
+Data Science,0.65,MEDIUM_RESILIENCE,Learn AI tools and prompt engineering,Learn AI tools and prompt engineering
+AI/ML,1.0,HIGH_RESILIENCE,Continue current path - AI augments your role,Continue current path - AI augments your role
+Cybersecurity,0.95,HIGH_RESILIENCE,Continue current path - AI augments your role,Continue current path - AI augments your role
+Cloud Computing,0.85,HIGH_RESILIENCE,Continue current path - AI augments your role,Continue current path - AI augments your role
