@@ -1,359 +1,107 @@
-Alright — now we move from theory → **actual development roadmap**.
-This is the exact step-by-step plan you and your friend should follow so the project builds smoothly without chaos.
+```markdown
+# TechSphere Analytics Engine v5.4
 
----
+Production-ready job market analytics pipeline that transforms raw job data into actionable business intelligence for Power BI dashboards.
 
-# 🔷 Phase 0 — Environment & Collaboration Setup
+## Quick Start
 
-### Step 1: Create Repository
-
-Create a repo on GitHub named:
-
-```
-techsphere-analytics
-```
-
-Add your friend as collaborator.
-
----
-
-### Step 2: Install Required Tools
-
-Both of you install:
-
-* Python (3.10+)
-* Visual Studio Code
-* Git
-* MySQL
-
----
-
-# 🔷 Phase 1 — Project Structure (Do this first)
-
-Create this folder structure:
-
-```
-techsphere/
-│
-├── data/
-│   ├── raw/
-│   ├── cleaned/
-│   └── refined/
-│
-├── src/
-│   ├── cleaning/
-│   ├── nlp/
-│   ├── analytics/
-│   └── scoring/
-│
-├── notebooks/
-├── dashboard/
-├── docs/
-└── requirements.txt
-```
-
-This mirrors your pipeline.
-
----
-
-# 🔷 Phase 2 — Dataset Preparation
-
-### Step 3: Collect Raw Datasets
-
-Put files in:
-
-```
-data/raw/
-```
-
-Example:
-
-```
-linkedin_2023.csv
-linkedin_2024.csv
-adzuna_2025.csv
-```
-
----
-
-# 🔷 Phase 3 — Data Cleaning Module
-
-### Step 4: Write Cleaning Script
-
-File:
-
-```
-src/cleaning/clean_jobs.py
-```
-
-This script will:
-
-* Remove duplicates
-* Drop null rows
-* Normalize job titles
-* Save output to:
-
-```
-data/cleaned/
-```
-
----
-
-# 🔷 Phase 4 — NLP Skill Extraction
-
-### Step 5: Install NLP Libraries
-
-In terminal:
-
-```
-pip install spacy pandas
+```bash
+# Install dependencies
+pip install pandas numpy spacy tqdm
 python -m spacy download en_core_web_sm
+
+# Run pipeline
+python src/analytics_engine_spacy.py
 ```
 
----
+## Input / Output
 
-### Step 6: Write NLP Module
+**Input:** `data/refined/final_refined_jobs.csv` (38,290 records, 7 domains)
 
-File:
+**Output:** `data/analytics/` - 10 files including:
+- `opportunity_scores_weighted.csv` - Risk-adjusted rankings
+- `master_relative_scores.csv` - 0-10 scale scores for dashboard
+- `layoff_exposure_scores.csv` - Layoff risk by domain
+- `ai_resilience_scores.csv` - AI replacement risk
+- `junior_bottleneck_index.csv` - Entry-level accessibility
 
-```
-src/nlp/skill_extractor.py
-```
+## Key Features
 
-This module:
+| Feature | Description |
+|---------|-------------|
+| **Quality-weighted analytics** | Original data (weight=1.0), generated (0.5-0.7) |
+| **Parallel NLP** | 7x faster keyword extraction across domains |
+| **Smart caching** | Second run: 2-3 seconds (vs 15-20 sec first run) |
+| **Relative scoring** | All metrics normalized to 0-10 scale |
 
-* Loads cleaned dataset
-* Extracts skills using spaCy + PhraseMatcher
-* Adds new column:
-
-```
-skills_extracted
-```
-
-Output:
-
-```
-data/refined/jobs_with_skills.csv
-```
-
----
-
-# 🔷 Phase 5 — Domain Classification
-
-### Step 7: Create Domain Mapping Rules
-
-File:
+## Opportunity Score Formula
 
 ```
-src/nlp/domain_classifier.py
+demand_score = normalized(job_count)
+salary_score = normalized(avg_salary)
+diversity_score = normalized(unique_skills)
+
+base_opportunity = (0.3 × demand) + (0.3 × salary) + (0.15 × diversity)
+safety_score = (1 - layoff_exposure) × 0.6 + (ai_resilience) × 0.4
+opportunity_score = (base_opportunity × 0.7) + (safety_score × 0.3)
 ```
 
-Example logic:
+## Output Files for Power BI
 
-```
-if "tensorflow" in skills:
-    domain = "AI/ML"
-elif "react" in skills:
-    domain = "Web Dev"
-```
+| File | Use |
+|------|-----|
+| `master_relative_scores.csv` | Main dashboard (0-10 scale) |
+| `opportunity_scores_weighted.csv` | Rankings & recommendations |
+| `layoff_heatmap_report.csv` | 4-quadrant matrix |
+| `skill_frequency_weighted.csv` | Skill demand analysis |
+| `salary_stats_weighted.csv` | Compensation benchmarks |
 
-This adds:
+## Configuration
 
-```
-domain
-```
+Edit at top of script:
 
-column to refined dataset.
-
----
-
-# 🔷 Phase 6 — Feature Engineering
-
-### Step 8: Extract Analytical Features
-
-File:
-
-```
-src/analytics/feature_builder.py
+```python
+PARALLEL_WORKERS = 6          # CPU cores to use
+USE_CACHE = True              # Enable/disable caching
+SALARY_OUTLIER_CLIP = 0.99    # Remove top 1% outliers
 ```
 
-This script computes:
+## Performance
 
-* experience_level
-* remote_flag
-* salary_band
+| Run | Time |
+|-----|------|
+| First run (no cache) | 15-20 seconds |
+| Cached runs | 2-3 seconds |
+| Memory usage | ~800 MB peak |
 
-Now dataset becomes fully structured.
+## Domain Coverage
 
----
+| Domain | Job Count | Market Share |
+|--------|-----------|--------------|
+| Software Engineering | 16,074 | 42.0% |
+| Data Science | 6,618 | 17.3% |
+| DevOps | 4,636 | 12.1% |
+| Cybersecurity | 3,132 | 8.2% |
+| Web Development | 3,042 | 7.9% |
+| AI/ML | 2,762 | 7.2% |
+| Cloud Computing | 2,026 | 5.3% |
 
-# 🔷 Phase 7 — Metrics Computation
+## Troubleshooting
 
-### Step 9: Calculate Core Indicators
+| Issue | Solution |
+|-------|----------|
+| `ModuleNotFoundError: spacy` | `pip install spacy && python -m spacy download en_core_web_sm` |
+| Out of memory | Reduce `PARALLEL_WORKERS` to 2-3 |
+| Cache corrupted | Delete `data/cache/*.pkl` files |
+| Slow performance | Increase `SPACY_BATCH_SIZE` to 200 |
 
-File:
+## Power BI Integration
 
+1. Get Data → Text/CSV → Select all CSV files from `data/analytics/`
+2. Create relationships using `domain` as key
+3. Build visuals using relative scores (0-10 scale)
+
+## License
+
+UPES - TechSphere Analytics Team
 ```
-src/analytics/metrics.py
-```
-
-This computes:
-
-* job volume per domain
-* growth rate (2023 → 2024)
-* skill expansion index
-* median salary
-
-Output:
-
-```
-domain_metrics.csv
-```
-
----
-
-# 🔷 Phase 8 — Opportunity Score Model
-
-### Step 10: Implement TSOS
-
-File:
-
-```
-src/scoring/opportunity_score.py
-```
-
-Formula:
-
-```
-TSOS = w1*growth + w2*volume + w3*skills + w4*salary
-```
-
-Output:
-
-```
-domain_rankings.csv
-```
-
----
-
-# 🔷 Phase 9 — Database Integration (Optional but good)
-
-### Step 11: Create MySQL Schema
-
-Tables:
-
-```
-jobs_cleaned
-jobs_refined
-domain_metrics
-domain_scores
-```
-
-Write script:
-
-```
-src/db/upload_to_mysql.py
-```
-
----
-
-# 🔷 Phase 10 — Visualization / Dashboard
-
-### Step 12: Build Dashboard
-
-Use:
-Streamlit
-
-File:
-
-```
-dashboard/app.py
-```
-
-This will display:
-
-* domain ranking table
-* skill heatmaps
-* salary comparison
-
----
-
-# 🔷 Phase 11 — Testing & Validation
-
-### Step 13: Validate Outputs
-
-Check:
-
-* Are duplicates removed?
-* Are skills extracted correctly?
-* Do domains make sense?
-* Are rankings stable?
-
----
-
-# 🔷 Phase 12 — Documentation
-
-### Step 14: Write Documentation
-
-In:
-
-```
-docs/
-```
-
-Include:
-
-* pipeline diagram
-* dataset schema
-* scoring formula
-
-This helps in viva and report writing.
-
----
-
-# 🔷 Recommended Work Division
-
-You:
-
-* NLP + Analytics + Scoring
-
-Friend:
-
-* Data Cleaning + Database + Dashboard
-
-This prevents merge conflicts.
-
----
-
-# 🔷 Development Flow Summary
-
-```
-Raw Data
-↓
-Cleaning
-↓
-NLP Extraction
-↓
-Domain Classification
-↓
-Feature Engineering
-↓
-Metrics
-↓
-Opportunity Score
-↓
-Dashboard
-```
-
----
-
-# 🔷 If You Want Next
-
-We can now start actual coding with:
-
-* Step 1: requirements.txt
-* Step 2: cleaning script template
-* Step 3: skill dictionary design
-
-Say:
-**“start coding phase 1”** and we’ll build the project line-by-line.
