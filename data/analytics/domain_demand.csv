@@ -1,8 +1,8 @@
-domain,job_count,weighted_count,pct,weighted_pct,confidence
-Software Engineering,16074,10370.1,41.98,37.75,0.645
-Data Science,6618,4996.0,17.28,18.19,0.755
-DevOps,4636,3543.2999999999997,12.11,12.9,0.764
-Cybersecurity,3132,2408.9,8.18,8.77,0.769
-Web Development,3042,2217.6,7.94,8.07,0.729
-AI/ML,2762,2235.7,7.21,8.14,0.809
-Cloud Computing,2026,1696.7,5.29,6.18,0.837
+domain,job_count,weighted_count,pct,weighted_pct,confidence,demand_score
+Software Engineering,16074,10370.1,41.98,37.75,0.645,1.0
+Data Science,6618,4996.0,17.28,18.19,0.755,0.3269
+DevOps,4636,3543.2999999999997,12.11,12.9,0.764,0.1858
+Cybersecurity,3132,2408.9,8.18,8.77,0.769,0.0787
+Web Development,3042,2217.6,7.94,8.07,0.729,0.0723
+AI/ML,2762,2235.7,7.21,8.14,0.809,0.0524
+Cloud Computing,2026,1696.7,5.29,6.18,0.837,0.0

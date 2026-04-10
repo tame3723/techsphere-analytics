@@ -1,8 +1,8 @@
 domain,actual_junior_pct,expected_junior_pct,bottleneck_gap,junior_freeze_severity,advice
+Software Engineering,0.9,22,21.1,CRITICAL,Get certifications or internships before applying
+Web Development,1.1,20,18.9,CRITICAL,Get certifications or internships before applying
+DevOps,1.1,15,13.9,MODERATE,Build portfolio with AI-assisted projects
+Data Science,1.9,20,18.1,CRITICAL,Get certifications or internships before applying
 AI/ML,1.8,15,13.2,MODERATE,Build portfolio with AI-assisted projects
 Cybersecurity,0.9,18,17.1,CRITICAL,Get certifications or internships before applying
 Cloud Computing,0.8,15,14.2,MODERATE,Build portfolio with AI-assisted projects
-DevOps,1.2,15,13.8,MODERATE,Build portfolio with AI-assisted projects
-Data Science,2.0,20,18.0,CRITICAL,Get certifications or internships before applying
-Software Engineering,0.9,22,21.1,CRITICAL,Get certifications or internships before applying
-Web Development,1.1,20,18.9,CRITICAL,Get certifications or internships before applying

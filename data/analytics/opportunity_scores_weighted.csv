@@ -1,8 +1,8 @@
-domain,opportunity_score,base_opportunity,safety_score,layoff_exposure_score,risk_tier,strategic_recommendation,comp_confidence,rank
-AI/ML,0.5168,0.3885611556398343,0.9016,0.164,LOW_RISK,CORE INVESTMENT - Solid fundamentals,0.757,1
-Cloud Computing,0.4623,0.3214285714285714,0.8848,0.092,LOW_RISK,MONITOR - Wait for clearer signals,0.768,2
-Software Engineering,0.4386,0.33991849117262196,0.7347999999999999,0.142,LOW_RISK,MONITOR - Wait for clearer signals,0.699,3
-DevOps,0.4107,0.2659879570736598,0.8450000000000001,0.125,LOW_RISK,MONITOR - Wait for clearer signals,0.738,4
-Data Science,0.408,0.29987483767997963,0.7322,0.213,LOW_RISK,MONITOR - Wait for clearer signals,0.732,5
-Cybersecurity,0.3947,0.22099308670977771,0.9158,0.107,LOW_RISK,MONITOR - Wait for clearer signals,0.741,6
-Web Development,0.2092,0.060874298759095946,0.6542,0.143,LOW_RISK,"AVOID - Low opportunity, high risk",0.726,7
+rank,domain,opportunity_score,base_opportunity,safety_score,demand_score,salary_score,diversity_score,layoff_exposure_score,ai_resilience_score,risk_tier,strategic_recommendation,job_count,weighted_avg_min
+1,AI/ML,0.5672,0.3998,0.9578,0.0524,0.7804,1.0,0.037,0.95,LOW_RISK,CORE INVESTMENT,2762,2352296.0
+2,Cloud Computing,0.4882,0.3214,0.8774,0.0,1.0,0.1429,0.071,0.8,LOW_RISK,CAUTIOUS - Monitor,2026,2660596.0
+3,Cybersecurity,0.4475,0.241,0.9294,0.0787,0.5819,0.2857,0.051,0.9,LOW_RISK,CAUTIOUS - Monitor,3132,2099305.0
+4,DevOps,0.4423,0.273,0.8374,0.1858,0.5814,0.2857,0.071,0.7,LOW_RISK,CAUTIOUS - Monitor,4636,2116350.0
+5,Data Science,0.433,0.288,0.7714,0.3269,0.276,0.7143,0.081,0.55,LOW_RISK,CAUTIOUS - Monitor,6618,1761327.0
+6,Software Engineering,0.3632,0.3268,0.4482,1.0,0.0894,0.0,0.553,0.45,HIGH_RISK,CONSIDER - Do research,16074,1572605.0
+7,Web Development,0.2401,0.0645,0.6498,0.0723,0.0,0.2857,0.117,0.3,LOW_RISK,AVOID,3042,1425650.0

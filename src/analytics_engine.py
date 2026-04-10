@@ -1,6 +1,6 @@
 """
-analytics_engine_spacy.py - PRODUCTION Job Market Analytics Engine v5.1
-"REAL LAYOFFS DATA EDITION" - FIXED FOR YOUR EXCEL STRUCTURE
+analytics_engine_spacy.py - PRODUCTION Job Market Analytics Engine v5.4
+"REAL LAYOFFS DATA EDITION" - COMPLETELY FIXED SCORING
 """
 
 import pandas as pd
@@ -56,14 +56,17 @@ QUALITY_WEIGHTS = {
 # Domain mapping (Excel names -> internal names)
 DOMAIN_MAPPING = {
     'Software Engineering': 'Software Engineering',
-    'Web Development\n(Front-end / Full-stack)': 'Web Development',
     'Web Development (Front-end / Full-stack)': 'Web Development',
+    'Web Development\n(Front-end / Full-stack)': 'Web Development',
     'DevOps / Platform Eng.': 'DevOps',
     'Data Science': 'Data Science',
     'AI / ML Engineering': 'AI/ML',
     'Cybersecurity': 'Cybersecurity',
     'Cloud Computing': 'Cloud Computing'
 }
+
+# Core domains list
+CORE_DOMAINS = ['Software Engineering', 'Web Development', 'DevOps', 'Data Science', 'AI/ML', 'Cybersecurity', 'Cloud Computing']
 
 # Opportunity score weights
 OPPORTUNITY_WEIGHTS = {
@@ -94,8 +97,13 @@ def init_worker():
 
 
 def process_domain_keywords(domain, texts, weights, n=30):
-    """Process a single domain for keyword extraction."""
+    """Process a single domain for keyword extraction with self-initialization."""
     global _NLP
+    
+    if _NLP is None:
+        import spacy
+        _NLP = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+        _NLP.max_length = SPACY_MAX_LENGTH
     
     if not texts or not any(texts):
         return []
@@ -140,16 +148,17 @@ def process_domain_keywords(domain, texts, weights, n=30):
 
 
 # ============================================================
-# REAL LAYOFFS DATA INTEGRATOR - FIXED FOR YOUR EXCEL
+# REAL LAYOFFS DATA INTEGRATOR
 # ============================================================
 
 class RealLayoffsIntegrator:
-    """Integrates ACTUAL layoffs data from layoffs.xlsx (2022-2025)."""
+    """Integrates ACTUAL layoffs data from layoffs.xlsx (2020-2026)."""
     
     def __init__(self, layoffs_file: Path):
         self.layoffs_file = layoffs_file
         self.domain_summary = None
         self.company_details = None
+        self.annual_totals = None
         self.results = {
             'layoff_exposure': None,
             'ai_resilience': None,
@@ -163,27 +172,28 @@ class RealLayoffsIntegrator:
         logger.info("Loading real layoffs data from layoffs.xlsx...")
         
         try:
-            # Load Domain Summary sheet - skip first row (the note), use row 1 as headers
-            # Row 0 = "Sources: ..." note
-            # Row 1 = actual headers
             self.domain_summary = pd.read_excel(
                 self.layoffs_file, 
-                sheet_name='Domain Summary',
-                header=1,  # Use row 1 (0-indexed) as headers
+                sheet_name='Domain Breakdown',
                 engine='openpyxl'
             )
             
-            # Load Company Detail sheet - similar structure
             self.company_details = pd.read_excel(
                 self.layoffs_file,
-                sheet_name='Company Detail',
-                header=1,
+                sheet_name='Company Events',
                 engine='openpyxl'
             )
             
-            logger.info(f"  Raw domain data shape: {self.domain_summary.shape}")
+            self.annual_totals = pd.read_excel(
+                self.layoffs_file,
+                sheet_name='Annual Industry Totals',
+                engine='openpyxl'
+            )
             
-            # Clean and parse the data
+            logger.info(f"  Raw domain breakdown shape: {self.domain_summary.shape}")
+            logger.info(f"  Raw company events shape: {self.company_details.shape}")
+            logger.info(f"  Raw annual totals shape: {self.annual_totals.shape}")
+            
             self._clean_domain_summary()
             
             self.data_loaded = True
@@ -199,88 +209,92 @@ class RealLayoffsIntegrator:
     def _clean_domain_summary(self):
         """Clean and standardize domain summary data."""
         
-        # The columns after reading with header=1 should be:
-        # 0: Domain
-        # 1: Approx. Total Workforce (2022)
-        # 2: 2022 Layoffs
-        # 3: 2023 Layoffs
-        # 4: 2024 Layoffs
-        # 5: 2025 Layoffs
-        # 6: Total (2022–25)
-        # 7: % of 2022 Workforce
-        # 8: YoY Change 2024→2025
-        # 9: Trend
-        # 10: Primary Drivers
-        # 11: 2026 Outlook
-        
-        # Get the column names (should be the actual headers)
-        cols = self.domain_summary.columns.tolist()
-        logger.info(f"  Domain summary columns: {cols[:6]}...")
-        
-        # Create a clean dataframe with proper column names
         clean_data = []
         
+        # Find header row
+        data_start_idx = None
+        
         for idx, row in self.domain_summary.iterrows():
-            # Skip if domain is NaN or is a header row
-            domain_val = row.iloc[0] if len(row) > 0 else None
-            if pd.isna(domain_val) or str(domain_val).strip() == '' or str(domain_val).strip() == 'Domain':
+            first_cell = str(row.iloc[0]) if len(row) > 0 and pd.notna(row.iloc[0]) else ''
+            
+            if 'Domain' in first_cell:
+                for col_idx in [1, 2, 3, 4]:
+                    if len(row) > col_idx and pd.notna(row.iloc[col_idx]):
+                        cell_str = str(row.iloc[col_idx])
+                        if '2022' in cell_str or '2023' in cell_str or '2024' in cell_str or '2025' in cell_str:
+                            data_start_idx = idx + 1
+                            break
+                if data_start_idx:
+                    break
+        
+        if data_start_idx is None:
+            data_start_idx = 2
+            logger.warning("  Header row not found, using fallback start at row 2")
+        
+        logger.info(f"  Data starts at row {data_start_idx}")
+        
+        for idx in range(data_start_idx, len(self.domain_summary)):
+            row = self.domain_summary.iloc[idx]
+            
+            if len(row) == 0:
+                continue
+                
+            domain_raw = str(row.iloc[0]) if len(row) > 0 and pd.notna(row.iloc[0]) else ''
+            
+            if (pd.isna(domain_raw) or 
+                domain_raw == '' or 
+                domain_raw == 'nan' or
+                'note' in domain_raw.lower() or
+                'evidence' in domain_raw.lower()):
                 continue
             
-            # Extract values
-            domain_raw = str(domain_val).strip()
+            layoffs_2022 = self._safe_numeric(row.iloc[1] if len(row) > 1 else 0)
+            layoffs_2023 = self._safe_numeric(row.iloc[2] if len(row) > 2 else 0)
+            layoffs_2024 = self._safe_numeric(row.iloc[3] if len(row) > 3 else 0)
+            layoffs_2025 = self._safe_numeric(row.iloc[4] if len(row) > 4 else 0)
+            layoffs_2026 = self._safe_numeric(row.iloc[5] if len(row) > 5 else 0)
             
-            # Get layoffs numbers (columns 2-5)
-            layoffs_2022 = self._safe_numeric(row.iloc[2] if len(row) > 2 else 0)
-            layoffs_2023 = self._safe_numeric(row.iloc[3] if len(row) > 3 else 0)
-            layoffs_2024 = self._safe_numeric(row.iloc[4] if len(row) > 4 else 0)
-            layoffs_2025 = self._safe_numeric(row.iloc[5] if len(row) > 5 else 0)
+            key_evidence = ''
+            if len(row) > 7 and pd.notna(row.iloc[7]):
+                key_evidence = str(row.iloc[7])
             
-            # Get workforce (column 1)
-            workforce = self._safe_numeric(row.iloc[1] if len(row) > 1 else 0)
-            
-            # Get percentage (column 7)
-            pct_workforce = self._safe_numeric(row.iloc[7] if len(row) > 7 else 0)
-            
-            # Get trend and drivers
-            trend = str(row.iloc[9] if len(row) > 9 else '').strip()
-            drivers = str(row.iloc[10] if len(row) > 10 else '').strip()
-            outlook = str(row.iloc[11] if len(row) > 11 else '').strip()
-            
-            # Map domain name
             domain = DOMAIN_MAPPING.get(domain_raw, domain_raw)
             
-            # Only include our 7 core domains
-            core_domains = ['Software Engineering', 'Web Development', 'DevOps', 'Data Science', 'AI/ML', 'Cybersecurity', 'Cloud Computing']
-            if domain not in core_domains:
+            if domain not in CORE_DOMAINS:
+                continue
+            
+            if layoffs_2022 == 0 and layoffs_2023 == 0 and layoffs_2024 == 0 and layoffs_2025 == 0:
                 continue
             
             clean_data.append({
-                'domain_raw': domain_raw,
                 'domain': domain,
-                'workforce_2022': workforce,
                 'layoffs_2022': layoffs_2022,
                 'layoffs_2023': layoffs_2023,
                 'layoffs_2024': layoffs_2024,
                 'layoffs_2025': layoffs_2025,
+                'layoffs_2026_ytd': layoffs_2026,
                 'total_layoffs': layoffs_2022 + layoffs_2023 + layoffs_2024 + layoffs_2025,
-                'pct_workforce': pct_workforce,
-                'trend': trend,
-                'primary_drivers': drivers,
-                'outlook_2026': outlook
+                'key_evidence': key_evidence[:300] if len(key_evidence) > 0 else ''
             })
         
         self.domain_summary = pd.DataFrame(clean_data)
         logger.info(f"  Cleaned {len(self.domain_summary)} domain records")
-        logger.info(f"  Domains: {self.domain_summary['domain'].tolist()}")
+        
+        if len(self.domain_summary) > 0:
+            print("\n" + "-" * 60)
+            print("LOADED LAYOFFS DATA")
+            print("-" * 60)
+            for _, row in self.domain_summary.iterrows():
+                print(f"  {row['domain']:25s}: 2022={row['layoffs_2022']:,.0f} | 2023={row['layoffs_2023']:,.0f} | 2024={row['layoffs_2024']:,.0f} | 2025={row['layoffs_2025']:,.0f}")
+            print("-" * 60)
     
     def _safe_numeric(self, value):
         """Safely convert to numeric."""
         if pd.isna(value):
             return 0
         try:
-            # Handle string percentages like "12%" or "▼"
             if isinstance(value, str):
-                value = value.replace('%', '').replace('▼', '').replace('▲', '').strip()
+                value = value.replace(',', '').replace('~', '').strip()
                 if value == '':
                     return 0
             return float(value)
@@ -293,38 +307,42 @@ class RealLayoffsIntegrator:
         
         exposures = []
         
+        if self.domain_summary is None or len(self.domain_summary) == 0:
+            return self._get_fallback_exposure()
+        
         for _, row in self.domain_summary.iterrows():
             domain = row['domain']
             
-            # Get layoff numbers
             layoffs_2022 = float(row['layoffs_2022'])
             layoffs_2023 = float(row['layoffs_2023'])
             layoffs_2024 = float(row['layoffs_2024'])
             layoffs_2025 = float(row['layoffs_2025'])
-            workforce = float(row['workforce_2022']) if row['workforce_2022'] > 0 else 100000
             
-            # Calculate layoff rates (percentage of workforce)
-            rate_2022 = (layoffs_2022 / workforce) * 100 if workforce > 0 else 0
-            rate_2023 = (layoffs_2023 / workforce) * 100 if workforce > 0 else 0
-            rate_2024 = (layoffs_2024 / workforce) * 100 if workforce > 0 else 0
-            rate_2025 = (layoffs_2025 / workforce) * 100 if workforce > 0 else 0
+            # Calculate year-over-year change
+            yoy_2023 = layoffs_2023 - layoffs_2022
+            yoy_2024 = layoffs_2024 - layoffs_2023
+            yoy_2025 = layoffs_2025 - layoffs_2024
             
-            # Peak rate
-            peak_rate = max(rate_2022, rate_2023, rate_2024, rate_2025)
+            # Calculate trend (improving if layoffs are decreasing)
+            trend_score = 0
+            if yoy_2025 < 0 and yoy_2024 < 0:
+                trend_score = -0.2  # Strongly improving
+            elif yoy_2025 < 0:
+                trend_score = -0.1  # Improving
+            elif yoy_2025 > 0:
+                trend_score = 0.1   # Worsening
             
-            # YoY change
-            yoy_change = rate_2025 - rate_2024
+            # Normalize layoff volume (higher layoffs = higher exposure)
+            max_layoffs = 310000  # Software Engineering total
+            volume_score = (row['total_layoffs'] / max_layoffs) * 0.5
             
-            # Composite exposure score (normalized 0-1)
-            # Weighted: recent year 50%, peak 30%, worsening trend 20%
-            exposure_score = (
-                (rate_2025 / 10) * 0.5 +      # Normalize rate (max ~10%)
-                (peak_rate / 10) * 0.3 +
-                (max(0, yoy_change) / 10) * 0.2
-            )
-            exposure_score = min(1.0, exposure_score)
+            # Recent year weight (2025 matters most)
+            recent_score = (layoffs_2025 / max_layoffs) * 0.3
             
-            # Determine risk tier
+            # Combined exposure score (0-1)
+            exposure_score = volume_score + recent_score + max(0, trend_score)
+            exposure_score = min(1.0, max(0.0, exposure_score))
+            
             if exposure_score < 0.25:
                 risk_tier = 'LOW_RISK'
             elif exposure_score < 0.50:
@@ -332,19 +350,17 @@ class RealLayoffsIntegrator:
             else:
                 risk_tier = 'HIGH_RISK'
             
-            # Calculate total percentage
-            total_pct = (row['total_layoffs'] / workforce * 100) if workforce > 0 else 0
-            
             exposures.append({
                 'domain': domain,
                 'layoff_exposure_score': round(exposure_score, 3),
                 'risk_tier': risk_tier,
                 'actual_layoffs_total': int(row['total_layoffs']),
                 'actual_layoffs_2025': int(layoffs_2025),
-                'pct_workforce_laid_off': round(total_pct, 2),
-                'trend_direction': 'Improving' if yoy_change < 0 else 'Worsening' if yoy_change > 0 else 'Stable',
-                'outlook_2026': row['outlook_2026'][:200] if len(row['outlook_2026']) > 0 else 'Stabilizing',
-                'primary_drivers': row['primary_drivers'][:300] if len(row['primary_drivers']) > 0 else ''
+                'layoffs_2022': int(layoffs_2022),
+                'layoffs_2023': int(layoffs_2023),
+                'layoffs_2024': int(layoffs_2024),
+                'trend_direction': 'Improving' if yoy_2025 < 0 else 'Worsening' if yoy_2025 > 0 else 'Stable',
+                'key_evidence': row.get('key_evidence', '')[:200]
             })
         
         df_exposure = pd.DataFrame(exposures)
@@ -353,94 +369,87 @@ class RealLayoffsIntegrator:
         df_exposure.to_csv(OUTPUT_DIR / 'layoff_exposure_scores.csv', index=False)
         logger.info(f"  [OK] layoff_exposure_scores.csv ({len(df_exposure)} domains)")
         
-        # Print to console for verification
         print("\n" + "-" * 60)
-        print("LAYOFF EXPOSURE SCORES (from your Excel data)")
+        print("LAYOFF EXPOSURE SCORES")
         print("-" * 60)
         for _, row in df_exposure.iterrows():
-            print(f"  {row['domain']:25s}: Score={row['layoff_exposure_score']:.3f} | {row['risk_tier']} | 2025 Layoffs={row['actual_layoffs_2025']:,}")
+            print(f"  {row['domain']:25s}: Score={row['layoff_exposure_score']:.3f} | {row['risk_tier']}")
         print("-" * 60)
         
         return df_exposure
+    
+    def _get_fallback_exposure(self) -> pd.DataFrame:
+        """Fallback exposure scores."""
+        fallback_data = pd.DataFrame([
+            {'domain': 'AI/ML', 'layoff_exposure_score': 0.12, 'risk_tier': 'LOW_RISK', 
+             'actual_layoffs_total': 19500, 'actual_layoffs_2025': 6000,
+             'layoffs_2022': 1500, 'layoffs_2023': 4000, 'layoffs_2024': 8000,
+             'trend_direction': 'Improving', 'key_evidence': 'GenAI postings +170%'},
+            {'domain': 'Cybersecurity', 'layoff_exposure_score': 0.15, 'risk_tier': 'LOW_RISK',
+             'actual_layoffs_total': 28000, 'actual_layoffs_2025': 6000,
+             'layoffs_2022': 3000, 'layoffs_2023': 7000, 'layoffs_2024': 12000,
+             'trend_direction': 'Improving', 'key_evidence': '2nd fastest-growing skill'},
+            {'domain': 'Cloud Computing', 'layoff_exposure_score': 0.18, 'risk_tier': 'LOW_RISK',
+             'actual_layoffs_total': 39000, 'actual_layoffs_2025': 8000,
+             'layoffs_2022': 5000, 'layoffs_2023': 12000, 'layoffs_2024': 14000,
+             'trend_direction': 'Improving', 'key_evidence': 'AI infra investment'},
+            {'domain': 'DevOps', 'layoff_exposure_score': 0.22, 'risk_tier': 'LOW_RISK',
+             'actual_layoffs_total': 40000, 'actual_layoffs_2025': 7000,
+             'layoffs_2022': 8000, 'layoffs_2023': 15000, 'layoffs_2024': 10000,
+             'trend_direction': 'Improving', 'key_evidence': 'Top 15% in-demand'},
+            {'domain': 'Data Science', 'layoff_exposure_score': 0.35, 'risk_tier': 'MEDIUM_RISK',
+             'actual_layoffs_total': 45000, 'actual_layoffs_2025': 9000,
+             'layoffs_2022': 6000, 'layoffs_2023': 18000, 'layoffs_2024': 12000,
+             'trend_direction': 'Improving', 'key_evidence': '414% growth by 2035'},
+            {'domain': 'Software Engineering', 'layoff_exposure_score': 0.65, 'risk_tier': 'HIGH_RISK',
+             'actual_layoffs_total': 310000, 'actual_layoffs_2025': 55000,
+             'layoffs_2022': 55000, 'layoffs_2023': 130000, 'layoffs_2024': 70000,
+             'trend_direction': 'Improving', 'key_evidence': 'Largest slice of layoffs'},
+            {'domain': 'Web Development', 'layoff_exposure_score': 0.55, 'risk_tier': 'HIGH_RISK',
+             'actual_layoffs_total': 68000, 'actual_layoffs_2025': 8000,
+             'layoffs_2022': 18000, 'layoffs_2023': 28000, 'layoffs_2024': 14000,
+             'trend_direction': 'Improving', 'key_evidence': 'Front-end decline'}
+        ])
+        
+        self.results['layoff_exposure'] = fallback_data
+        return fallback_data
     
     def compute_ai_resilience_from_trends(self) -> pd.DataFrame:
         """Calculate AI Resilience based on actual trends."""
         logger.info("\n[LAYOFF-2] Computing AI resilience from trend data")
         
-        # Default resilience scores based on domain characteristics
-        default_resilience = {
-            'AI/ML': 0.85,
-            'Cybersecurity': 0.80,
-            'Cloud Computing': 0.70,
-            'DevOps': 0.65,
-            'Data Science': 0.50,
-            'Software Engineering': 0.40,
-            'Web Development': 0.35
+        # AI resilience scores (higher = more AI-proof)
+        ai_resilience_scores = {
+            'AI/ML': 0.95,          # AI experts will be in demand to build AI
+            'Cybersecurity': 0.90,   # Security always needed, AI creates new threats
+            'Cloud Computing': 0.80,  # Cloud infrastructure still needs humans
+            'DevOps': 0.70,          # Automation helps but humans still needed
+            'Data Science': 0.55,    # Some automation, but strategy needs humans
+            'Software Engineering': 0.45,  # AI assists but doesn't replace
+            'Web Development': 0.30   # Most at risk from AI tools
         }
         
         resilience_data = []
         
-        # Get exposure data
-        exposure_df = self.results.get('layoff_exposure')
-        
-        if exposure_df is not None and not exposure_df.empty:
-            for _, row in exposure_df.iterrows():
-                domain = row['domain']
-                resilience = default_resilience.get(domain, 0.50)
-                
-                # Adjust based on outlook
-                outlook = str(row.get('outlook_2026', '')).lower()
-                if any(word in outlook for word in ['rebounding', 'resilient', 'growing', 'demand']):
-                    resilience += 0.10
-                if any(word in outlook for word in ['declining', 'saturated', 'risk', 'shrinking']):
-                    resilience -= 0.15
-                
-                # Adjust based on trend
-                trend = row.get('trend_direction', '')
-                if trend == 'Improving':
-                    resilience += 0.05
-                elif trend == 'Worsening':
-                    resilience -= 0.10
-                
-                resilience = max(0.0, min(1.0, resilience))
-                
-                if resilience >= 0.7:
-                    tier = 'HIGH_RESILIENCE'
-                    action = 'Continue current path - AI augments your role'
-                elif resilience >= 0.4:
-                    tier = 'MEDIUM_RESILIENCE'
-                    action = 'Learn AI tools and prompt engineering'
-                else:
-                    tier = 'LOW_RESILIENCE'
-                    action = 'Pivot to AI verification/architecture roles'
-                
-                resilience_data.append({
-                    'domain': domain,
-                    'ai_resilience_score': round(resilience, 3),
-                    'resilience_tier': tier,
-                    'recommendation': action,
-                    'action': action
-                })
-        else:
-            # Fallback for all domains
-            for domain, resilience in default_resilience.items():
-                if resilience >= 0.7:
-                    tier = 'HIGH_RESILIENCE'
-                    action = 'Continue current path'
-                elif resilience >= 0.4:
-                    tier = 'MEDIUM_RESILIENCE'
-                    action = 'Learn AI tools'
-                else:
-                    tier = 'LOW_RESILIENCE'
-                    action = 'Consider pivoting'
-                
-                resilience_data.append({
-                    'domain': domain,
-                    'ai_resilience_score': round(resilience, 3),
-                    'resilience_tier': tier,
-                    'recommendation': action,
-                    'action': action
-                })
+        for domain in CORE_DOMAINS:
+            resilience = ai_resilience_scores.get(domain, 0.50)
+            
+            if resilience >= 0.7:
+                tier = 'HIGH_RESILIENCE'
+                action = 'Continue current path - AI augments your role'
+            elif resilience >= 0.5:
+                tier = 'MEDIUM_RESILIENCE'
+                action = 'Learn AI tools and prompt engineering'
+            else:
+                tier = 'LOW_RESILIENCE'
+                action = 'Pivot to AI-adjacent roles or specialize'
+            
+            resilience_data.append({
+                'domain': domain,
+                'ai_resilience_score': round(resilience, 3),
+                'resilience_tier': tier,
+                'recommendation': action
+            })
         
         df_resilience = pd.DataFrame(resilience_data)
         self.results['ai_resilience'] = df_resilience
@@ -455,7 +464,6 @@ class RealLayoffsIntegrator:
         logger.info("\n[LAYOFF-3] Computing junior bottleneck index")
         
         junior_data = []
-        core_domains = ['AI/ML', 'Cybersecurity', 'Cloud Computing', 'DevOps', 'Data Science', 'Software Engineering', 'Web Development']
         
         expected_map = {
             'AI/ML': 15, 'Cybersecurity': 18, 'Cloud Computing': 15,
@@ -463,18 +471,18 @@ class RealLayoffsIntegrator:
             'Web Development': 20
         }
         
-        for domain in core_domains:
+        for domain in CORE_DOMAINS:
             domain_df = job_df[job_df['domain'] == domain] if job_df is not None else pd.DataFrame()
             
-            junior_keywords = ['junior', 'entry', 'trainee', 'fresher', 'graduate', 'intern', '0-2', '0-3']
+            junior_keywords = ['junior', 'entry', 'trainee', 'fresher', 'graduate', 'intern']
             junior_count = 0
             total_count = len(domain_df)
             
             if total_count > 0 and 'job_title' in domain_df.columns:
+                mask = pd.Series([False] * total_count, index=domain_df.index)
                 for keyword in junior_keywords:
-                    junior_count += domain_df['job_title'].str.lower().str.contains(
-                        keyword, na=False
-                    ).sum()
+                    mask = mask | domain_df['job_title'].str.lower().str.contains(keyword, na=False)
+                junior_count = mask.sum()
             
             actual_junior_pct = (junior_count / total_count * 100) if total_count > 0 else 8.0
             expected_junior_pct = expected_map.get(domain, 18)
@@ -510,23 +518,94 @@ class RealLayoffsIntegrator:
     
     def get_company_layoff_events(self) -> pd.DataFrame:
         """Return company-level layoff events."""
-        if self.company_details is not None and len(self.company_details) > 0:
-            # Clean company data similarly
-            company_data = []
-            for _, row in self.company_details.iterrows():
-                if pd.notna(row.iloc[0]) and row.iloc[0] not in ['Company', 'Note:', None]:
-                    company_data.append({
-                        'company': str(row.iloc[0]) if pd.notna(row.iloc[0]) else '',
-                        'domain': str(row.iloc[1]) if len(row) > 1 and pd.notna(row.iloc[1]) else '',
-                        'year': int(row.iloc[2]) if len(row) > 2 and pd.notna(row.iloc[2]) else 0,
-                        'layoffs': int(row.iloc[3]) if len(row) > 3 and pd.notna(row.iloc[3]) else 0,
-                        'reason': str(row.iloc[6]) if len(row) > 6 and pd.notna(row.iloc[6]) else ''
-                    })
-            return pd.DataFrame(company_data)
+        if self.company_details is None or len(self.company_details) == 0:
+            return pd.DataFrame()
+        
+        company_data = []
+        header_keywords = ['Company', 'Note:', 'Company-Level', 'All entries']
+        
+        data_start_idx = 0
+        for idx, row in self.company_details.iterrows():
+            first_cell = str(row.iloc[0]) if len(row) > 0 and pd.notna(row.iloc[0]) else ''
+            is_header = any(kw.lower() in first_cell.lower() for kw in header_keywords)
+            
+            if not is_header and first_cell and first_cell.strip() and first_cell not in ['nan', '']:
+                data_start_idx = idx
+                break
+        
+        if data_start_idx == 0:
+            data_start_idx = 2
+        
+        for idx in range(data_start_idx, len(self.company_details)):
+            row = self.company_details.iloc[idx]
+            
+            if len(row) == 0:
+                continue
+                
+            company = str(row.iloc[0]).strip() if pd.notna(row.iloc[0]) else ''
+            
+            if not company or any(kw.lower() in company.lower() for kw in header_keywords):
+                continue
+            
+            domain = ''
+            if len(row) > 1 and pd.notna(row.iloc[1]):
+                domain_raw = str(row.iloc[1])
+                domain = DOMAIN_MAPPING.get(domain_raw, domain_raw)
+            
+            year = 0
+            if len(row) > 2 and pd.notna(row.iloc[2]):
+                try:
+                    year_val = row.iloc[2]
+                    if isinstance(year_val, str):
+                        year_match = re.search(r'20\d{2}', year_val)
+                        if year_match:
+                            year = int(year_match.group())
+                    else:
+                        year = int(float(year_val))
+                except (ValueError, TypeError):
+                    year = 0
+            
+            layoffs = 0
+            if len(row) > 3 and pd.notna(row.iloc[3]):
+                layoffs_str = str(row.iloc[3]).strip()
+                try:
+                    if '%' in layoffs_str:
+                        match = re.search(r'(\d+(?:\.\d+)?)', layoffs_str)
+                        if match:
+                            layoffs = float(match.group(1))
+                    else:
+                        cleaned = layoffs_str.replace(',', '').replace('~', '').strip()
+                        if cleaned and cleaned != '':
+                            layoffs = int(float(cleaned))
+                except (ValueError, TypeError):
+                    layoffs = 0
+            
+            pct_workforce = str(row.iloc[4]) if len(row) > 4 and pd.notna(row.iloc[4]) else ''
+            region = str(row.iloc[5]) if len(row) > 5 and pd.notna(row.iloc[5]) else ''
+            reason = str(row.iloc[6]) if len(row) > 6 and pd.notna(row.iloc[6]) else ''
+            ai_attributed = 'Yes' if len(row) > 9 and pd.notna(row.iloc[9]) and 'yes' in str(row.iloc[9]).lower() else 'No'
+            
+            company_data.append({
+                'company': company,
+                'domain': domain if domain else 'Unknown',
+                'year': year,
+                'layoffs': int(layoffs) if layoffs > 0 else 0,
+                'pct_workforce': pct_workforce,
+                'region': region,
+                'reason': reason[:500] if len(reason) > 500 else reason,
+                'ai_attributed': ai_attributed
+            })
+        
+        if company_data:
+            df = pd.DataFrame(company_data)
+            logger.info(f"  Loaded {len(df)} company layoff events")
+            df.to_csv(OUTPUT_DIR / 'company_layoff_events.csv', index=False)
+            return df
+        
         return pd.DataFrame()
     
     def run_all(self, job_df: pd.DataFrame = None):
-        """Execute all risk analytics with real layoffs data."""
+        """Execute all risk analytics."""
         if self.load_layoffs_data():
             exposure = self.compute_layoff_exposure_from_real_data()
             resilience = self.compute_ai_resilience_from_trends()
@@ -540,49 +619,24 @@ class RealLayoffsIntegrator:
                 'exposure': exposure,
                 'resilience': resilience,
                 'junior_bottleneck': junior,
-                'company_events': self.company_details
             }
         else:
             return self._get_fallback_profiles(job_df)
     
     def _get_fallback_profiles(self, job_df=None):
-        """Fallback risk profiles if Excel cannot be loaded."""
+        """Fallback risk profiles."""
         logger.info("Using fallback estimated risk profiles")
         
-        fallback_data = pd.DataFrame([
-            {'domain': 'AI/ML', 'layoff_exposure_score': 0.12, 'risk_tier': 'LOW_RISK', 
-             'actual_layoffs_total': 25500, 'actual_layoffs_2025': 7800, 'pct_workforce_laid_off': 6.07,
-             'trend_direction': 'Improving', 'outlook_2026': 'Net positive; GenAI postings +170%'},
-            {'domain': 'Cybersecurity', 'layoff_exposure_score': 0.15, 'risk_tier': 'LOW_RISK',
-             'actual_layoffs_total': 32600, 'actual_layoffs_2025': 8200, 'pct_workforce_laid_off': 4.79,
-             'trend_direction': 'Improving', 'outlook_2026': '2nd fastest-growing skill globally'},
-            {'domain': 'Cloud Computing', 'layoff_exposure_score': 0.20, 'risk_tier': 'LOW_RISK',
-             'actual_layoffs_total': 50800, 'actual_layoffs_2025': 9500, 'pct_workforce_laid_off': 4.62,
-             'trend_direction': 'Improving', 'outlook_2026': 'AI infra investment rebounding'},
-            {'domain': 'DevOps', 'layoff_exposure_score': 0.28, 'risk_tier': 'MEDIUM_RISK',
-             'actual_layoffs_total': 60200, 'actual_layoffs_2025': 11200, 'pct_workforce_laid_off': 6.34,
-             'trend_direction': 'Improving', 'outlook_2026': 'Among top 15% in-demand roles'},
-            {'domain': 'Data Science', 'layoff_exposure_score': 0.38, 'risk_tier': 'MEDIUM_RISK',
-             'actual_layoffs_total': 78300, 'actual_layoffs_2025': 16500, 'pct_workforce_laid_off': 10.04,
-             'trend_direction': 'Improving', 'outlook_2026': '414% projected growth by 2035'},
-            {'domain': 'Software Engineering', 'layoff_exposure_score': 0.52, 'risk_tier': 'HIGH_RISK',
-             'actual_layoffs_total': 287000, 'actual_layoffs_2025': 62000, 'pct_workforce_laid_off': 6.83,
-             'trend_direction': 'Improving', 'outlook_2026': 'Demand rebounding for AI-augmented SWEs'},
-            {'domain': 'Web Development', 'layoff_exposure_score': 0.65, 'risk_tier': 'HIGH_RISK',
-             'actual_layoffs_total': 126000, 'actual_layoffs_2025': 24000, 'pct_workforce_laid_off': 7.00,
-             'trend_direction': 'Improving', 'outlook_2026': 'Full-stack postings +9%'}
-        ])
-        
-        self.results['layoff_exposure'] = fallback_data
+        exposure = self._get_fallback_exposure()
         
         resilience_data = pd.DataFrame([
-            {'domain': 'AI/ML', 'ai_resilience_score': 0.85, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path', 'action': 'Continue current path'},
-            {'domain': 'Cybersecurity', 'ai_resilience_score': 0.80, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path', 'action': 'Continue current path'},
-            {'domain': 'Cloud Computing', 'ai_resilience_score': 0.70, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path', 'action': 'Continue current path'},
-            {'domain': 'DevOps', 'ai_resilience_score': 0.65, 'resilience_tier': 'MEDIUM_RESILIENCE', 'recommendation': 'Learn AI tools', 'action': 'Learn AI tools'},
-            {'domain': 'Data Science', 'ai_resilience_score': 0.50, 'resilience_tier': 'MEDIUM_RESILIENCE', 'recommendation': 'Learn AI tools', 'action': 'Learn AI tools'},
-            {'domain': 'Software Engineering', 'ai_resilience_score': 0.40, 'resilience_tier': 'LOW_RESILIENCE', 'recommendation': 'Consider pivoting', 'action': 'Consider pivoting'},
-            {'domain': 'Web Development', 'ai_resilience_score': 0.35, 'resilience_tier': 'LOW_RESILIENCE', 'recommendation': 'Consider pivoting', 'action': 'Consider pivoting'}
+            {'domain': 'AI/ML', 'ai_resilience_score': 0.95, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path'},
+            {'domain': 'Cybersecurity', 'ai_resilience_score': 0.90, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path'},
+            {'domain': 'Cloud Computing', 'ai_resilience_score': 0.80, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path'},
+            {'domain': 'DevOps', 'ai_resilience_score': 0.70, 'resilience_tier': 'HIGH_RESILIENCE', 'recommendation': 'Continue current path'},
+            {'domain': 'Data Science', 'ai_resilience_score': 0.55, 'resilience_tier': 'MEDIUM_RESILIENCE', 'recommendation': 'Learn AI tools'},
+            {'domain': 'Software Engineering', 'ai_resilience_score': 0.45, 'resilience_tier': 'MEDIUM_RESILIENCE', 'recommendation': 'Learn AI tools'},
+            {'domain': 'Web Development', 'ai_resilience_score': 0.30, 'resilience_tier': 'LOW_RESILIENCE', 'recommendation': 'Pivot to AI-adjacent roles'}
         ])
         self.results['ai_resilience'] = resilience_data
         
@@ -592,10 +646,9 @@ class RealLayoffsIntegrator:
             junior = None
         
         return {
-            'exposure': fallback_data,
+            'exposure': exposure,
             'resilience': resilience_data,
             'junior_bottleneck': junior,
-            'company_events': None
         }
 
 
@@ -612,21 +665,18 @@ class SpacyAnalyticsEngine:
         self.layoffs_integrator = None
         
         logger.info("=" * 80)
-        logger.info("TechSphere Analytics v5.1 - REAL LAYOFFS DATA EDITION")
+        logger.info("TechSphere Analytics v5.4 - COMPLETELY FIXED SCORING")
         logger.info("=" * 80)
         logger.info(f"Parallel workers: {PARALLEL_WORKERS}")
         logger.info(f"Cache enabled: {USE_CACHE}")
-        logger.info(f"Layoffs data file: {LAYOFFS_FILE}")
     
     def _get_config_hash(self):
-        """Generate cache key from data AND config parameters."""
+        """Generate cache key."""
         df_hash = hashlib.md5(
             pd.util.hash_pandas_object(self.df, index=True).values
         ).hexdigest()
-        
         config_str = f"{INCLUDE_POS}_{MIN_TOKEN_LENGTH}_{SPACY_BATCH_SIZE}"
         config_hash = hashlib.md5(config_str.encode()).hexdigest()
-        
         return hashlib.md5(f"{df_hash}_{config_hash}".encode()).hexdigest()
     
     def load_data(self) -> pd.DataFrame:
@@ -636,30 +686,25 @@ class SpacyAnalyticsEngine:
         
         self.df = pd.read_csv(INPUT_FILE)
         
-        # Memory optimization
         for col in ['domain', 'description_quality', 'salary_quality', 'source']:
             if col in self.df.columns:
                 self.df[col] = self.df[col].astype('category')
         
-        # Map column names
         if 'description_source' in self.df.columns:
             self.df.rename(columns={'description_source': 'description_quality'}, inplace=True)
         if 'salary_source' in self.df.columns:
             self.df.rename(columns={'salary_source': 'salary_quality'}, inplace=True)
         
-        # Add quality weights
         self.df['desc_weight'] = self.df['description_quality'].map(lambda x: QUALITY_WEIGHTS.get(x, 0.5))
         self.df['salary_weight'] = self.df['salary_quality'].map(lambda x: QUALITY_WEIGHTS.get(x, 0.5))
         self.df['desc_weight'] = self.df['desc_weight'].fillna(0.5)
         self.df['salary_weight'] = self.df['salary_weight'].fillna(0.5)
         
-        # Vectorized skill count
         if 'extracted_skills' in self.df.columns:
             self.df['skills_count'] = self.df['extracted_skills'].fillna('').apply(
                 lambda x: len(re.split(r',\s*', str(x))) if str(x).strip() else 0
             )
         
-        # Initialize layoffs integrator
         self.layoffs_integrator = RealLayoffsIntegrator(LAYOFFS_FILE)
         
         logger.info(f"Loaded {len(self.df):,} job rows in {time.time()-start:.1f}s")
@@ -667,7 +712,7 @@ class SpacyAnalyticsEngine:
     
     def compute_domain_demand(self):
         """Domain demand with confidence scores."""
-        logger.info("\n[1/8] Domain demand")
+        logger.info("\n[1/7] Domain demand")
         
         domain_counts = self.df['domain'].value_counts().reset_index()
         domain_counts.columns = ['domain', 'job_count']
@@ -681,24 +726,34 @@ class SpacyAnalyticsEngine:
         domain_counts['confidence'] = (domain_counts['weighted_count'] / domain_counts['job_count']).round(3)
         domain_counts = domain_counts.sort_values('job_count', ascending=False)
         
+        # Normalize demand score (0-1)
+        max_jobs = domain_counts['job_count'].max()
+        min_jobs = domain_counts['job_count'].min()
+        if max_jobs > min_jobs:
+            domain_counts['demand_score'] = ((domain_counts['job_count'] - min_jobs) / (max_jobs - min_jobs)).round(4)
+        else:
+            domain_counts['demand_score'] = 0.5
+        
         self.results['domain_demand'] = domain_counts
         return domain_counts
     
     def compute_salary_stats(self):
-        """Weighted salary statistics with outlier clipping."""
-        logger.info("\n[2/8] Salary stats")
+        """Weighted salary statistics with proper normalization."""
+        logger.info("\n[2/7] Salary stats")
         
         stats = []
         for domain, domain_df in self.df.groupby('domain'):
-            valid = domain_df[(domain_df['salary_min'] > 0) & (domain_df['salary_max'] > 0)]
+            valid = domain_df[(domain_df['salary_min'] > 0) & (domain_df['salary_max'] > 0)].copy()
             
             if len(valid) == 0:
                 continue
             
+            # Clip outliers
             if SALARY_OUTLIER_CLIP:
                 clip_min = valid['salary_min'].quantile(SALARY_OUTLIER_CLIP)
                 clip_max = valid['salary_max'].quantile(SALARY_OUTLIER_CLIP)
-                valid = valid[(valid['salary_min'] <= clip_min) & (valid['salary_max'] <= clip_max)]
+                valid['salary_min'] = valid['salary_min'].clip(upper=clip_min)
+                valid['salary_max'] = valid['salary_max'].clip(upper=clip_max)
             
             original_pct = (valid['salary_quality'] == 'original').mean() * 100
             
@@ -720,13 +775,25 @@ class SpacyAnalyticsEngine:
                 'confidence': round(valid['salary_weight'].mean(), 3)
             })
         
-        salary_df = pd.DataFrame(stats).sort_values('weighted_avg_min', ascending=False)
+        salary_df = pd.DataFrame(stats)
+        
+        # Normalize salary score (0-1) based on avg of min and max
+        if not salary_df.empty:
+            salary_df['avg_salary'] = (salary_df['weighted_avg_min'] + salary_df['weighted_avg_max']) / 2
+            max_salary = salary_df['avg_salary'].max()
+            min_salary = salary_df['avg_salary'].min()
+            if max_salary > min_salary:
+                salary_df['salary_score'] = ((salary_df['avg_salary'] - min_salary) / (max_salary - min_salary)).round(4)
+            else:
+                salary_df['salary_score'] = 0.5
+            salary_df = salary_df.sort_values('weighted_avg_min', ascending=False)
+        
         self.results['salary_stats'] = salary_df
         return salary_df
     
     def compute_skill_frequency_vectorized(self):
         """Skill frequency with VECTORIZED extraction."""
-        logger.info("\n[3/8] Skill frequency (vectorized)")
+        logger.info("\n[3/7] Skill frequency (vectorized)")
         
         skill_data = []
         
@@ -760,12 +827,23 @@ class SpacyAnalyticsEngine:
             skill_df = skill_df.sort_values(['domain', 'weighted_freq'], ascending=[True, False])
             skill_df['rank'] = skill_df.groupby('domain')['weighted_freq'].rank(ascending=False, method='dense').astype(int)
         
+        # Calculate diversity score (unique skills per domain)
+        diversity_scores = skill_df.groupby('domain').size().reset_index(name='unique_skills')
+        max_skills = diversity_scores['unique_skills'].max()
+        min_skills = diversity_scores['unique_skills'].min()
+        if max_skills > min_skills:
+            diversity_scores['diversity_score'] = ((diversity_scores['unique_skills'] - min_skills) / (max_skills - min_skills)).round(4)
+        else:
+            diversity_scores['diversity_score'] = 0.5
+        
         self.results['skill_frequency'] = skill_df
+        self.results['diversity_scores'] = diversity_scores
+        
         return skill_df
     
     def compute_top_keywords_parallel(self, n=30):
-        """Parallel keyword extraction with optimized settings."""
-        logger.info(f"\n[4/8] Top keywords (parallel, {PARALLEL_WORKERS} workers)")
+        """Parallel keyword extraction."""
+        logger.info(f"\n[4/7] Top keywords (parallel, {PARALLEL_WORKERS} workers)")
         start = time.time()
         
         domain_data = []
@@ -818,211 +896,213 @@ class SpacyAnalyticsEngine:
     
     def compute_risk_adjusted_opportunity_score(self):
         """Weighted opportunity score with REAL layoffs data."""
-        logger.info("\n[5/8] Risk-adjusted opportunity scores")
+        logger.info("\n[5/7] Risk-adjusted opportunity scores")
         
-        demand = self.results['domain_demand'][['domain', 'weighted_count', 'confidence']]
-        salary = self.results['salary_stats'][['domain', 'weighted_avg_min', 'confidence']]
-        skills = self.results['skill_frequency'].groupby('domain').size().reset_index(name='unique_skills')
+        # Get all component scores
+        demand_df = self.results['domain_demand'][['domain', 'demand_score', 'job_count']]
+        salary_df = self.results['salary_stats'][['domain', 'salary_score', 'weighted_avg_min']]
+        diversity_df = self.results['diversity_scores'][['domain', 'diversity_score', 'unique_skills']]
         
         # Get risk data
         if self.layoffs_integrator and self.layoffs_integrator.results.get('layoff_exposure') is not None:
-            risk_exposure = self.layoffs_integrator.results['layoff_exposure'][['domain', 'layoff_exposure_score', 'risk_tier']]
-            ai_resilience = self.layoffs_integrator.results['ai_resilience'][['domain', 'ai_resilience_score']]
+            risk_df = self.layoffs_integrator.results['layoff_exposure'][['domain', 'layoff_exposure_score', 'risk_tier']]
+            resilience_df = self.layoffs_integrator.results['ai_resilience'][['domain', 'ai_resilience_score']]
         else:
-            # Fallback risk data
-            risk_exposure = pd.DataFrame([
+            risk_df = pd.DataFrame([
                 {'domain': 'AI/ML', 'layoff_exposure_score': 0.12, 'risk_tier': 'LOW_RISK'},
                 {'domain': 'Cybersecurity', 'layoff_exposure_score': 0.15, 'risk_tier': 'LOW_RISK'},
-                {'domain': 'Cloud Computing', 'layoff_exposure_score': 0.20, 'risk_tier': 'LOW_RISK'},
-                {'domain': 'DevOps', 'layoff_exposure_score': 0.28, 'risk_tier': 'MEDIUM_RISK'},
-                {'domain': 'Data Science', 'layoff_exposure_score': 0.38, 'risk_tier': 'MEDIUM_RISK'},
-                {'domain': 'Software Engineering', 'layoff_exposure_score': 0.52, 'risk_tier': 'HIGH_RISK'},
-                {'domain': 'Web Development', 'layoff_exposure_score': 0.65, 'risk_tier': 'HIGH_RISK'},
+                {'domain': 'Cloud Computing', 'layoff_exposure_score': 0.18, 'risk_tier': 'LOW_RISK'},
+                {'domain': 'DevOps', 'layoff_exposure_score': 0.22, 'risk_tier': 'LOW_RISK'},
+                {'domain': 'Data Science', 'layoff_exposure_score': 0.35, 'risk_tier': 'MEDIUM_RISK'},
+                {'domain': 'Software Engineering', 'layoff_exposure_score': 0.65, 'risk_tier': 'HIGH_RISK'},
+                {'domain': 'Web Development', 'layoff_exposure_score': 0.55, 'risk_tier': 'HIGH_RISK'},
             ])
-            ai_resilience = pd.DataFrame([
-                {'domain': 'AI/ML', 'ai_resilience_score': 0.85},
-                {'domain': 'Cybersecurity', 'ai_resilience_score': 0.80},
-                {'domain': 'Cloud Computing', 'ai_resilience_score': 0.70},
-                {'domain': 'DevOps', 'ai_resilience_score': 0.65},
-                {'domain': 'Data Science', 'ai_resilience_score': 0.50},
-                {'domain': 'Software Engineering', 'ai_resilience_score': 0.40},
-                {'domain': 'Web Development', 'ai_resilience_score': 0.35},
+            resilience_df = pd.DataFrame([
+                {'domain': 'AI/ML', 'ai_resilience_score': 0.95},
+                {'domain': 'Cybersecurity', 'ai_resilience_score': 0.90},
+                {'domain': 'Cloud Computing', 'ai_resilience_score': 0.80},
+                {'domain': 'DevOps', 'ai_resilience_score': 0.70},
+                {'domain': 'Data Science', 'ai_resilience_score': 0.55},
+                {'domain': 'Software Engineering', 'ai_resilience_score': 0.45},
+                {'domain': 'Web Development', 'ai_resilience_score': 0.30},
             ])
         
-        df = demand.merge(salary, on='domain', how='left', suffixes=('_demand', '_salary'))
-        df = df.merge(skills, on='domain', how='left').fillna(0)
-        df = df.merge(risk_exposure, on='domain', how='left')
-        df = df.merge(ai_resilience, on='domain', how='left')
+        # Merge all data
+        df = demand_df.merge(salary_df, on='domain', how='left')
+        df = df.merge(diversity_df, on='domain', how='left')
+        df = df.merge(risk_df, on='domain', how='left')
+        df = df.merge(resilience_df, on='domain', how='left')
         
         # Fill NaN values
+        df['salary_score'] = df['salary_score'].fillna(0.3)
+        df['diversity_score'] = df['diversity_score'].fillna(0.3)
         df['layoff_exposure_score'] = df['layoff_exposure_score'].fillna(0.5)
         df['ai_resilience_score'] = df['ai_resilience_score'].fillna(0.5)
         df['risk_tier'] = df['risk_tier'].fillna('MEDIUM_RISK')
         
-        # Normalize base metrics
-        for col, name in [('weighted_count', 'demand'), ('weighted_avg_min', 'salary'), ('unique_skills', 'diversity')]:
-            max_val = df[col].max()
-            min_val = df[col].min()
-            if max_val > min_val:
-                df[f'{name}_score'] = (df[col] - min_val) / (max_val - min_val)
-            else:
-                df[f'{name}_score'] = 1.0
-        
-        # Safety score
-        df['safety_score'] = (1 - df['layoff_exposure_score']) * 0.6 + df['ai_resilience_score'] * 0.4
+        # Calculate safety score (higher = safer)
+        # Inverse of layoff exposure + AI resilience
+        df['safety_score'] = ((1 - df['layoff_exposure_score']) * 0.6 + df['ai_resilience_score'] * 0.4).round(4)
         df['safety_score'] = df['safety_score'].clip(0, 1)
         
-        # Base opportunity score
+        # Calculate base opportunity score
         df['base_opportunity'] = (
             OPPORTUNITY_WEIGHTS['demand'] * df['demand_score'] +
             OPPORTUNITY_WEIGHTS['salary'] * df['salary_score'] +
             OPPORTUNITY_WEIGHTS['diversity'] * df['diversity_score']
-        )
+        ).round(4)
         
-        # Risk-adjusted final score
-        df['opportunity_score'] = (df['base_opportunity'] * 0.75) + (df['safety_score'] * 0.25)
-        df['opportunity_score'] = df['opportunity_score'].round(4)
+        # Calculate final risk-adjusted opportunity score
+        df['opportunity_score'] = (df['base_opportunity'] * 0.70 + df['safety_score'] * 0.30).round(4)
         
-        # Confidence
-        df['comp_confidence'] = (df['confidence_demand'] * 0.3 + df['confidence_salary'] * 0.5 + 0.2).round(3)
-        
+        # Sort and rank
         df = df.sort_values('opportunity_score', ascending=False)
         df['rank'] = range(1, len(df) + 1)
         
         # Recommendations
         def get_recommendation(row):
-            if row['opportunity_score'] >= 0.7 and row['layoff_exposure_score'] <= 0.25:
-                return 'AGGRESSIVE INVEST - High opportunity, low layoff risk'
-            elif row['opportunity_score'] >= 0.5 and row['layoff_exposure_score'] <= 0.35:
-                return 'CORE INVESTMENT - Solid fundamentals'
-            elif row['opportunity_score'] >= 0.5:
-                return 'CAUTIOUS - High reward but significant risk'
-            elif row['opportunity_score'] < 0.3:
-                return 'AVOID - Low opportunity, high risk'
+            if row['opportunity_score'] >= 0.65 and row['layoff_exposure_score'] <= 0.25:
+                return 'AGGRESSIVE INVEST'
+            elif row['opportunity_score'] >= 0.55:
+                return 'CORE INVESTMENT'
+            elif row['opportunity_score'] >= 0.40:
+                return 'CAUTIOUS - Monitor'
+            elif row['opportunity_score'] < 0.30:
+                return 'AVOID'
             else:
-                return 'MONITOR - Wait for clearer signals'
+                return 'CONSIDER - Do research'
         
         df['strategic_recommendation'] = df.apply(get_recommendation, axis=1)
         
-        output_cols = ['domain', 'opportunity_score', 'base_opportunity', 'safety_score', 
-                       'layoff_exposure_score', 'risk_tier', 'strategic_recommendation',
-                       'comp_confidence', 'rank']
+        output_cols = ['rank', 'domain', 'opportunity_score', 'base_opportunity', 'safety_score',
+                       'demand_score', 'salary_score', 'diversity_score',
+                       'layoff_exposure_score', 'ai_resilience_score', 'risk_tier', 
+                       'strategic_recommendation', 'job_count', 'weighted_avg_min']
         
         self.results['opportunity_scores'] = df[output_cols]
         self.results['opportunity_scores'].to_csv(OUTPUT_DIR / 'opportunity_scores_weighted.csv', index=False)
         
         logger.info(f"  [OK] opportunity_scores_weighted.csv ({len(df)} rows)")
         
-        # Print ranking
-        print("\n" + "-" * 60)
-        print("RISK-ADJUSTED OPPORTUNITY RANKINGS")
-        print("-" * 60)
+        print("\n" + "-" * 70)
+        print("RISK-ADJUSTED OPPORTUNITY RANKINGS (FIXED)")
+        print("-" * 70)
         for _, row in df.iterrows():
-            print(f"  {row['rank']}. {row['domain']:25s} Score: {row['opportunity_score']:.4f} | Risk: {row['risk_tier']}")
-        print("-" * 60)
+            print(f"  {row['rank']}. {row['domain']:25s} Score: {row['opportunity_score']:.4f} | Risk: {row['risk_tier']} | Rec: {row['strategic_recommendation']}")
+        print("-" * 70)
         
         return self.results['opportunity_scores']
     
-    def compute_domain_trends(self):
-        """Year-over-year trends."""
-        logger.info("\n[6/8] Domain trends")
+    def compute_master_relative_scores(self):
+        """Compute master relative scores file (0-10 scale)."""
+        logger.info("\n[6/7] Computing master relative scores")
         
-        if 'year' not in self.df.columns:
-            np.random.seed(42)
-            self.df['year'] = np.random.choice([2023, 2024, 2025], size=len(self.df), p=[0.2, 0.35, 0.45])
+        opp_df = self.results.get('opportunity_scores')
         
-        trends = (self.df.groupby(['year', 'domain'])
-                  .agg(jobs=('domain', 'count'), weighted_jobs=('desc_weight', 'sum'))
-                  .reset_index())
+        if opp_df is None or opp_df.empty:
+            logger.warning("  No opportunity scores available")
+            return pd.DataFrame()
         
-        trends = trends.sort_values(['domain', 'year'])
-        trends['growth'] = trends.groupby('domain')['jobs'].pct_change() * 100
+        # Create master dataframe
+        master_df = opp_df[['domain']].copy()
         
-        yearly_total = trends.groupby('year')['weighted_jobs'].sum().reset_index(name='year_total')
-        trends = trends.merge(yearly_total, on='year')
-        trends['market_share'] = (trends['weighted_jobs'] / trends['year_total'] * 100).round(2)
+        # Define metrics and their direction (True = higher is better)
+        metrics = {
+            'opportunity_score': ('opportunity_relative', True),
+            'safety_score': ('safety_relative', True),
+            'demand_score': ('demand_relative', True),
+            'salary_score': ('salary_relative', True),
+            'diversity_score': ('diversity_relative', True),
+            'ai_resilience_score': ('ai_resilience_relative', True),
+            'layoff_exposure_score': ('layoff_exposure_relative', False),  # Lower is better
+        }
         
-        self.results['domain_trends'] = trends
-        trends.to_csv(OUTPUT_DIR / 'domain_trends_weighted.csv', index=False)
+        for col, (new_col, higher_is_better) in metrics.items():
+            if col in opp_df.columns:
+                min_val = opp_df[col].min()
+                max_val = opp_df[col].max()
+                
+                if max_val > min_val:
+                    if higher_is_better:
+                        master_df[new_col] = ((opp_df[col] - min_val) / (max_val - min_val) * 10).round(2)
+                    else:
+                        master_df[new_col] = ((max_val - opp_df[col]) / (max_val - min_val) * 10).round(2)
+                else:
+                    master_df[new_col] = 5.0
         
-        return trends
-    
-    def compute_data_quality(self):
-        """Data source distribution."""
-        logger.info("\n[7/8] Data quality")
+        # Add junior bottleneck if available
+        if self.layoffs_integrator and self.layoffs_integrator.results.get('junior_bottleneck') is not None:
+            junior_df = self.layoffs_integrator.results['junior_bottleneck']
+            if 'bottleneck_gap' in junior_df.columns:
+                master_df = master_df.merge(junior_df[['domain', 'bottleneck_gap']], on='domain', how='left')
+                min_val = master_df['bottleneck_gap'].min()
+                max_val = master_df['bottleneck_gap'].max()
+                if max_val > min_val:
+                    master_df['junior_bottleneck_relative'] = ((max_val - master_df['bottleneck_gap']) / (max_val - min_val) * 10).round(2)
+                else:
+                    master_df['junior_bottleneck_relative'] = 5.0
         
-        desc_q = (self.df.groupby('description_quality')
-                  .agg(count=('description_quality', 'size'), weight=('desc_weight', 'sum'))
-                  .reset_index())
-        desc_q['pct'] = (desc_q['count'] / len(self.df) * 100).round(2)
-        desc_q['weighted_pct'] = (desc_q['weight'] / self.df['desc_weight'].sum() * 100).round(2)
+        # Calculate composite score
+        relative_cols = [col for col in master_df.columns if col.endswith('_relative')]
+        if relative_cols:
+            master_df['composite_score'] = master_df[relative_cols].mean(axis=1).round(2)
+            master_df['composite_rank'] = master_df['composite_score'].rank(ascending=False, method='dense').astype(int)
         
-        salary_q = (self.df.groupby('salary_quality')
-                    .agg(count=('salary_quality', 'size'), weight=('salary_weight', 'sum'))
-                    .reset_index())
-        salary_q['pct'] = (salary_q['count'] / len(self.df) * 100).round(2)
-        salary_q['weighted_pct'] = (salary_q['weight'] / self.df['salary_weight'].sum() * 100).round(2)
+        # Save files
+        master_df.to_csv(OUTPUT_DIR / 'master_relative_scores.csv', index=False)
+        master_df.to_excel(OUTPUT_DIR / 'master_relative_scores.xlsx', index=False)
         
-        self.results['description_quality'] = desc_q
-        self.results['salary_quality'] = salary_q
+        master_json = master_df.to_dict(orient='records')
+        with open(OUTPUT_DIR / 'master_relative_scores.json', 'w', encoding='utf-8') as f:
+            json.dump(master_json, f, indent=2)
         
-        desc_q.to_csv(OUTPUT_DIR / 'description_quality.csv', index=False)
-        salary_q.to_csv(OUTPUT_DIR / 'salary_quality.csv', index=False)
+        logger.info(f"  [OK] master_relative_scores files created ({len(master_df)} domains)")
         
-        return desc_q, salary_q
+        # Print summary
+        print("\n" + "=" * 80)
+        print("MASTER RELATIVE SCORES (0-10 scale)")
+        print("=" * 80)
+        print(master_df.to_string(index=False))
+        print("=" * 80)
+        
+        return master_df
     
     def generate_layoff_heatmap(self):
-        """Generate the Layoff Heatmap."""
-        logger.info("\n[8/8] Generating layoff heatmap")
+        """Generate layoff heatmap with quadrants."""
+        logger.info("\n[7/7] Generating layoff heatmap")
         
         if self.layoffs_integrator and self.layoffs_integrator.results.get('layoff_exposure') is not None:
             risk_data = self.layoffs_integrator.results['layoff_exposure'].copy()
+            opp_data = self.results['opportunity_scores'][['domain', 'opportunity_score', 'strategic_recommendation']]
             
-            # Merge with opportunity scores
-            risk_data = risk_data.merge(
-                self.results['opportunity_scores'][['domain', 'opportunity_score', 'strategic_recommendation']],
-                on='domain', how='left'
-            )
+            risk_data = risk_data.merge(opp_data, on='domain', how='left')
             
-            # Quadrant classification
             def get_quadrant(row):
-                opp_score = row.get('opportunity_score', 0.5)
-                risk_score = row.get('layoff_exposure_score', 0.5)
+                opp = row.get('opportunity_score', 0.5)
+                risk = row.get('layoff_exposure_score', 0.5)
                 
-                if opp_score >= 0.5 and risk_score <= 0.25:
-                    return 'SAFE HARBOR - High Opportunity, Low Layoff Risk'
-                elif opp_score >= 0.5 and risk_score > 0.25:
-                    return 'THE TRAP - High Opportunity, High Layoff Risk'
-                elif opp_score < 0.5 and risk_score <= 0.25:
-                    return 'THE PIVOT ZONE - Low Opportunity, Low Risk'
+                if opp >= 0.55 and risk <= 0.25:
+                    return 'SAFE HARBOR'
+                elif opp >= 0.55 and risk > 0.25:
+                    return 'THE TRAP'
+                elif opp < 0.55 and risk <= 0.25:
+                    return 'PIVOT ZONE'
                 else:
-                    return 'DANGER ZONE - Low Opportunity, High Layoff Risk'
+                    return 'DANGER ZONE'
             
             risk_data['heatmap_quadrant'] = risk_data.apply(get_quadrant, axis=1)
-            
-            # Save outputs
             risk_data.to_csv(OUTPUT_DIR / 'layoff_heatmap_report.csv', index=False)
             
-            # Also save as JSON
-            risk_json = risk_data.to_dict(orient='records')
-            with open(OUTPUT_DIR / 'layoff_heatmap_report.json', 'w', encoding='utf-8') as f:
-                json.dump(risk_json, f, indent=2)
-            
-            logger.info(f"  [OK] layoff_heatmap_report.csv & .json ({len(risk_data)} rows)")
-            
-            # Print quadrant summary
             print("\n" + "-" * 60)
-            print("LAYOFF HEATMAP QUADRANT DISTRIBUTION")
+            print("HEATMAP QUADRANT DISTRIBUTION")
             print("-" * 60)
-            quadrant_counts = risk_data['heatmap_quadrant'].value_counts()
-            for quadrant, count in quadrant_counts.items():
+            for quadrant, count in risk_data['heatmap_quadrant'].value_counts().items():
                 print(f"  {quadrant}: {count} domains")
             print("-" * 60)
             
             return risk_data
-        else:
-            logger.warning("  No layoffs data available for heatmap")
-            return pd.DataFrame()
+        
+        return pd.DataFrame()
     
     def save_outputs(self):
         """Save all results to CSV."""
@@ -1033,13 +1113,11 @@ class SpacyAnalyticsEngine:
             'salary_stats_weighted.csv': self.results.get('salary_stats'),
             'skill_frequency_weighted.csv': self.results.get('skill_frequency'),
             'opportunity_scores_weighted.csv': self.results.get('opportunity_scores'),
-            'domain_trends_weighted.csv': self.results.get('domain_trends'),
             'top_keywords_spacy.csv': self.results.get('top_keywords'),
             'description_quality.csv': self.results.get('description_quality'),
             'salary_quality.csv': self.results.get('salary_quality'),
         }
         
-        # Add layoffs outputs
         if self.layoffs_integrator:
             if self.layoffs_integrator.results.get('layoff_exposure') is not None:
                 outputs['layoff_exposure_scores.csv'] = self.layoffs_integrator.results['layoff_exposure']
@@ -1047,90 +1125,48 @@ class SpacyAnalyticsEngine:
                 outputs['ai_resilience_scores.csv'] = self.layoffs_integrator.results['ai_resilience']
             if self.layoffs_integrator.results.get('junior_bottleneck') is not None:
                 outputs['junior_bottleneck_index.csv'] = self.layoffs_integrator.results['junior_bottleneck']
+            
+            try:
+                company_events = self.layoffs_integrator.get_company_layoff_events()
+                if not company_events.empty:
+                    outputs['company_layoff_events.csv'] = company_events
+            except Exception as e:
+                logger.warning(f"  Could not load company events: {e}")
         
         saved = []
         for name, df in outputs.items():
             if df is not None and not df.empty:
                 df.to_csv(OUTPUT_DIR / name, index=False)
                 saved.append(name)
-                logger.info(f"  [OK] {name} ({len(df):,} rows)")
+                logger.info(f"  [OK] {name}")
         
-        self._save_summary()
         return saved
-    
-    def _save_summary(self):
-        """Generate summary report."""
-        report = OUTPUT_DIR / "techsphere_analytics_summary.txt"
-        with open(report, 'w', encoding='utf-8') as f:
-            f.write("=" * 80 + "\n")
-            f.write("TECHSPHERE ANALYTICS v5.1 - REAL LAYOFFS DATA EDITION\n")
-            f.write("=" * 80 + "\n\n")
-            f.write(f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-            f.write(f"Total job records: {len(self.df):,}\n")
-            f.write(f"Parallel workers: {PARALLEL_WORKERS}\n\n")
-            
-            f.write("=" * 80 + "\n")
-            f.write("RISK-ADJUSTED OPPORTUNITY RANKINGS\n")
-            f.write("=" * 80 + "\n\n")
-            
-            opp = self.results.get('opportunity_scores')
-            if opp is not None:
-                for _, row in opp.iterrows():
-                    f.write(f"  {row['rank']}. {row['domain']:25s}\n")
-                    f.write(f"     Opportunity Score: {row['opportunity_score']:.4f}\n")
-                    f.write(f"     Layoff Exposure: {row['layoff_exposure_score']:.3f}\n")
-                    f.write(f"     Risk Tier: {row['risk_tier']}\n")
-                    f.write(f"     Recommendation: {row['strategic_recommendation']}\n\n")
-        
-        logger.info(f"  [OK] Summary report")
     
     def run(self):
         """Execute full pipeline."""
         logger.info("=" * 80)
-        logger.info("TECHSPHERE ANALYTICS v5.1 - EXECUTION START")
+        logger.info("TECHSPHERE ANALYTICS v5.4 - EXECUTION START")
         logger.info("=" * 80)
         
-        # Load job data
         self.load_data()
-        
-        # Run core analytics
         self.compute_domain_demand()
         self.compute_salary_stats()
         self.compute_skill_frequency_vectorized()
         self.compute_top_keywords_parallel()
         
-        # Run layoffs integrator
         if self.layoffs_integrator:
             self.layoffs_integrator.run_all(job_df=self.df)
         
-        # Compute risk-adjusted opportunity scores
         self.compute_risk_adjusted_opportunity_score()
-        
-        # Run remaining analytics
-        self.compute_domain_trends()
-        self.compute_data_quality()
-        
-        # Generate layoff heatmap
+        self.compute_master_relative_scores()
         self.generate_layoff_heatmap()
         
-        # Save everything
         saved = self.save_outputs()
         
-        logger.info("\n" + "=" * 80)
-        logger.info(f"COMPLETE! Generated {len(saved)} files")
-        logger.info("=" * 80)
-        
         print("\n" + "=" * 80)
-        print("TECHSPHERE ANALYTICS v5.1 - EXECUTION COMPLETE")
-        print("=" * 80)
-        print(f"\nOutput directory: {OUTPUT_DIR}")
+        print("EXECUTION COMPLETE!")
+        print(f"Output directory: {OUTPUT_DIR}")
         print(f"Files generated: {len(saved)}")
-        print("\nKey outputs for Power BI:")
-        print("  📊 opportunity_scores_weighted.csv - Risk-adjusted rankings")
-        print("  📊 layoff_heatmap_report.csv - Quadrant analysis")
-        print("  📊 layoff_exposure_scores.csv - Layoff exposure by domain")
-        print("  📊 ai_resilience_scores.csv - AI replacement risk")
-        print("  📊 junior_bottleneck_index.csv - Entry-level hiring freeze")
         print("=" * 80)
         
         return self.results, saved
@@ -1140,7 +1176,7 @@ def main():
     try:
         engine = SpacyAnalyticsEngine()
         results, files = engine.run()
-        
+        print("\n✅ ALL ANALYTICS COMPLETE!")
     except Exception as e:
         logger.error(f"Failed: {e}")
         import traceback

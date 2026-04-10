@@ -1,0 +1,54 @@
+company,domain,year,layoffs,pct_workforce,region,reason,ai_attributed
+Airbnb,Web Dev / Platform Eng.,2020,1900,25%,Global,COVID-19 pandemic; travel bookings collapsed to near zero,No
+Uber,Software Engineering,2020,3700,14%,Global,COVID-19; ride-hailing demand collapsed; 14% of global workforce,No
+Lyft,Software Engineering,2020,982,17%,US,COVID-19; ride-share revenue near zero,No
+Booking.com,Web Development,2020,4375,25%,Global,COVID-19; travel/hospitality tech hit hardest,No
+Twitter / X,Software Engineering,2022,3700,50%,Global,"Elon Musk acquisition; mass cuts across engineering, product, trust & safety",No
+Meta,Software Engineering,2022,11000,13%,Global,Metaverse over-investment; ad revenue slowdown; Year of Efficiency begins,No
+Shopify,Web Development,2022,1000,10%,Canada/Global,Post-COVID e-commerce normalisation; over-hiring for pandemic demand,No
+Snap,Web Dev / Mobile,2022,1200,20%,US,Ad revenue collapse; mobile product team restructure,No
+Stripe,Software Engineering,2022,1100,14%,US,Over-hiring during ZIRP boom; burn rate reduction,No
+Netflix,Software Engineering,2022,450,3%,US,Subscriber growth miss; cost restructuring,No
+Coinbase,Software Engineering,2022,1100,18%,US,Crypto market crash; revenue collapse,No
+Google/Alphabet,Software Engineering,2023,12000,6%,Global,Post-pandemic over-hiring correction; revenue slowdown in ads,No
+Amazon,Software Engineering,2023,18000,5%,Global,Pandemic workforce excess; AWS + retail realignment; largest Amazon layoff ever,No
+Microsoft,Software Engineering,2023,10000,4%,Global,Gaming & Activision integration; cost control; following strong Xbox acquisition,No
+Meta,Software Engineering,2023,10000,13%,Global,Second round — Year of Efficiency declared by Zuckerberg; AI pivot,No
+Salesforce,Software Engineering,2023,7300,10%,Global,Post-pandemic correction; Tableau/Slack integration overlap cited,No
+Indeed/Glassdoor,Data Science,2023,1000,15%,Global,AI tools reducing analyst roles; Recruit Holdings restructuring,No
+Dropbox,Software Engineering,2023,500,16%,US,AI replacing internal workflows; product team rightsizing,No
+"Wordpress.com
+(Automattic)",Web Development,2023,400,16%,Global,Product & web engineering rightsizing post-growth plateau,No
+"GitHub
+(Microsoft)",DevOps / Platform,2023,230,10%,US,Post-acquisition integration; platform team redundancy after Copilot AI launch,No
+Adobe,Data Science,2023,1000,6%,Global,Cost control post-Figma deal collapse ($20B deal blocked); analytics team cuts,No
+Intel,Software Engineering,2024,15000,15%,US/Global,Revenue miss vs AI pivot; net income fell 85%; CEO announced 'most consequential changes in company history',No
+Cisco,Cybersecurity,2024,5600,7%,Global,Post-Splunk acquisition redundancy; second 2024 layoff round in August–September,No
+Cisco (2nd round),Cybersecurity,2024,5600,7%,Global,Second round same year — employees not told who was affected until Sep 16,No
+Dell Technologies,Cloud Computing,2024,6650,5%,US,Hardware revenue decline; cloud margin pressure; disclosed in 10-K SEC filing,No
+IBM,Cloud Computing,2024,3900,4%,Global,Hybrid cloud/AI portfolio shift; Watson-era data roles phased out,No
+Workday,Data Science,2024,1750,8.5%,Global,AI investment reallocation; disposing unused office space; announced at investor day,No
+Secureworks,Cybersecurity,2024,900,15%,US,Acquired by Sophos for $859M; overlap elimination post-acquisition,No
+Yahoo,Cybersecurity,2024,25,,US,CTO Liborski-led cyber unit restructure; changes to wider tech unit expected,No
+Equinix,Cloud Computing,2024,400,3%,Global,CEO transition (Adaire Fox-Martin replacing Charles Meyers); CISO + CIO departures,No
+Calendly,Web Development,2024,70,13%,US,"SaaS growth slowdown; engineering, customer experience & billing teams cut",No
+Twitch,DevOps,2024,500,35%,US,Amazon streaming platform pivot; infrastructure cost savings,No
+OpenText,Cloud Computing,2024,1200,1.7%,Canada/Global,$100M annual savings target; plans to rehire in sales & engineering in 2025,No
+CISA (US Gov),Cybersecurity,2024,130,,US,DOGE federal workforce reduction; cybersecurity experts alarmed at impact on CISA collaborations,No
+Stability AI,AI/ML,2024,200,25%,UK/US,Cash crisis; co-founder Emad Mostaque departure; pivot away from open models,No
+Intel,Software Engineering,2025,22000,20%,US/Global,"Announced April 23, 2025; multiyear turnaround; $10B 2025 cost savings; operating model simplification",No
+Meta,Software Engineering,2025,3600,5%,Global,Low-performer exit; CEO Zuckerberg memo; AI-driven restructuring; 5% based on performance ratings,No
+Microsoft,Software Engineering,2025,6000,3%,Global,Largest layoff since 2023; manager-layer reduction; focus on AI efficiency post strong Q1 earnings,No
+Salesforce,Software Engineering,2025,5000,7%,Global,"~1,000 in Feb + 4,000 support roles later; AI agents explicitly cited as driver by CEO Benioff",Yes
+Amazon,Software Engineering,2025,14000,4%,Global,October 2025; framed as 'reallocation of resources toward AI infrastructure'; management layer flattening,No
+Workday,Data Science,2025,1750,8.5%,Global,AI investment reallocation; office consolidation announced at investor day 2025,Yes
+HPE,DevOps / Cloud,2025,2500,5%,Global,19% share price decline Q1 2025; cloud portfolio rationalisation,No
+Otorio,Cybersecurity,2025,50,,Israel,Acquired by Armis for $120M; workforce integration cuts post-acquisition,No
+xAI (Elon Musk),AI/ML,2025,0,,US,Reorganisation; 2 co-founders + 8 engineers confirmed; Musk confirmed via social media. Company plans aggressive rehiring.,No
+Amazon,Software Engineering,2026,16000,,Global,"Jan 28, 2026 — largest single 2026 event; 'streamlining operations, flattening management layers'",No
+Intel,Software Engineering,2026,24000,~20%,US/Global,Announced as part of multiyear turnaround; operating model restructure; ties to 2025 plan,No
+Block (Jack Dorsey),Software Engineering,2026,4000,40%,US,"Feb 2026; Dorsey explicitly cited AI automation. 'Intelligence-native' model. 40% of entire 10,000-person workforce.",Yes
+Atlassian,Software Engineering,2026,1600,10%,Australia/Global,"March 11, 2026; 900+ R&D roles cut; CEO Mike Cannon-Brookes declared AI-first pivot; CTO replaced",Yes
+Meta (Reality Labs),AI/ML,2026,1500,,Global,Reality Labs division cuts; Zuckerberg frustrated Meta fell behind rivals in AI race,No
+WiseTech Global,Software Engineering,2026,2000,,Australia,"2,000 cuts announced over 2 years; Sydney-based; AI restructuring cited",No
+Ubisoft,Software Engineering,2026,0,,France/Global,Ending game development at Ghost Recon Studio Red Storm Entertainment,No
